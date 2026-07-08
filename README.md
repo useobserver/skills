@@ -1,4 +1,8 @@
 <p align="center">
+    <img src="assets/headline.png" alt="Observer Skills" height="100%">
+</p>
+
+<p align="center">
   <a href="https://status.use.observer"><img src="https://status.use.observer/badge.svg?style=for-the-badge" alt="Observer Cloud live status"></a>
 </p>
 
