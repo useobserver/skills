@@ -36,6 +36,14 @@ side through the MCP server or the CLI.
   their SLOs; `getSlo` includes the latest burn event. A null error
   budget means the SLO is still collecting its first day of data or
   its metric is currently stale, not that something is wrong.
+- An SLO's rolling window starts at the SLO's creation, never before:
+  metric history recorded before the SLO existed does not count, and
+  deleting and recreating an SLO is a clean reset.
+- Each SLO carries an `unknown_policy` for unobserved periods: `down`
+  (silence counts against the budget, default), `exclude` (silence
+  drops out of the math; monitoring coverage is disclosed instead), or
+  `up` (only for contracts that specify it). Set it via config-as-code
+  (`unknown_policy` on the slos entry) or the console.
 - `listIncidents` / `getIncident`, `listMaintenances` /
   `getMaintenance` — timeline state.
 - A metric can be healthy, degraded, unhealthy, no_data, or unknown.
@@ -77,6 +85,12 @@ apply, and are only deleted by prune.
 - "How is our SLO doing?" — `listSlos`, report target, window, and
   remaining error budget; a negative budget means the promise is
   currently broken.
+- "The budget looks wrong because of a misconfigured threshold or a
+  monitoring gap" — do NOT suggest deleting data. The console supports
+  exclusion windows on the SLO page: a period is removed from the math
+  with a written reason, the change is audit-logged, and every
+  exclusion is listed in compliance evidence packs. Alternatively set
+  `unknown_policy: exclude` when the gaps are telemetry, not downtime.
 - "Add an HTTP check for api.example.com" — export, add a metric with
   `source_type: http` and thresholds on response time, dry-run, apply.
   The agent picks the new definition up within five minutes.
