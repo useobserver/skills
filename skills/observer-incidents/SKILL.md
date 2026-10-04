@@ -40,6 +40,45 @@ posted.
   customers via `patchIncident` visibility. Public embeds and feeds
   never show customer-scoped incidents.
 
+## Customer targeting
+
+`createIncident`, `patchIncident`, `createMaintenance`, and
+`patchMaintenance` accept an optional `customer_targeting` object that
+records which customers an update affects:
+
+```json
+{
+  "customer_targeting": {
+    "mode": "selected",
+    "customers": ["acme", "6f1c2a9e-4b7d-4e2a-9c1f-2d3b4a5c6d7e"],
+    "notify_customer_subscribers": true
+  }
+}
+```
+
+- `mode`: `none` (public subscribers only), `selected` (the listed
+  customers), or `all` (every customer).
+- `customers`: customer ids or `external_id` values, resolved within
+  the organization. Required and non-empty for `selected`; not allowed
+  for `none` or `all`.
+- `notify_customer_subscribers`: whether the targeted customers'
+  linked subscribers are emailed about a public update. Defaults to
+  `true`.
+- Omit the field to leave targeting as it is. A new incident or
+  maintenance starts at `none`.
+
+Errors:
+
+- 400 `invalid_customer_targeting`: unknown mode, `customers` missing
+  for `selected`, or present for `none` or `all`.
+- 422 `unknown_customers`: a value matches no customer in the
+  organization; the response lists the unmatched values. Ask the user
+  for the correct id or external_id; never guess one.
+- 422 `customer_targeting_conflict`: the update is customer-scoped
+  (`visible_to_customer_ids` is set) and targeting is not `selected`
+  with exactly those customers. Omit `customer_targeting` to keep the
+  two in sync automatically.
+
 ## Maintenance
 
 Planned work uses maintenance windows, not incidents:

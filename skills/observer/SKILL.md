@@ -72,6 +72,12 @@ Keys and identity: resources carry a stable `key` field; apply matches
 on it. Resources created in the console (no key) are never touched by
 apply or prune.
 
+Plan and apply results carry a `warnings` list. Top-level keys that
+config does not manage (for example `incidents`, `maintenances`,
+`customers`, or a top-level `slos`) are ignored and reported there
+rather than failing the apply; SLOs belong under `services[].slos`.
+Relay warnings to the user instead of treating them as errors.
+
 ## Where to read documentation
 
 - Table of contents, one Markdown link per page: https://docs.use.observer/llms.txt
@@ -94,4 +100,5 @@ apply or prune.
   `unknown_policy: exclude` when the gaps are telemetry, not downtime.
 - "Add an HTTP check for api.example.com" — export, add a metric with
   `source_type: http` and thresholds on response time, dry-run, apply.
-  The agent picks the new definition up within five minutes.
+  The agent picks the new definition up in about 30 seconds (agent 1.6
+  and later; older agents within five minutes).
