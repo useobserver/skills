@@ -40,7 +40,7 @@ claude mcp add observer --transport http https://mcp.use.observer/mcp \
 
 Every tool maps one-to-one to a public API operation and is governed by
 the same key scopes and plan entitlement as the REST API. Full tool
-catalog: [MCP server documentation](https://docs.use.observer/docs/mcp).
+catalog: [MCP server documentation](https://docs.use.observer/docs/mcp/index).
 
 ## Skills
 
@@ -58,13 +58,13 @@ frontmatter header.
 
 The documentation site publishes LLM-ready exports:
 
-- `https://docs.use.observer/llms.txt` — table of contents.
-- `https://docs.use.observer/llms-full.txt` — the full corpus in one file.
-- Every docs page is also available as raw Markdown under
-  `https://docs.use.observer/raw/…` (path shown on each page).
+- `https://docs.use.observer/llms.txt`: an index of every page with a
+  one-line summary and a link to its Markdown.
+- Every docs page is also available as raw Markdown: append `.md` to
+  its path, for example `https://docs.use.observer/docs/mcp/index.md`.
 
-Point a research agent at `llms-full.txt` when it needs product
-knowledge without crawling.
+Point a research agent at `llms.txt` when it needs product knowledge
+without crawling, and let it fetch only the pages it needs.
 
 ## Related
 

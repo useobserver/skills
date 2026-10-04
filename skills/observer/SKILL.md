@@ -22,7 +22,7 @@ side through the MCP server or the CLI.
    dry-run that returns a plan. Show the plan to the user before
    committing unless they have explicitly pre-approved.
 4. **Never prune without instruction.** Apply with prune deletes
-   resources missing from the file. Only use it when the user asks
+   config-managed resources (those with a `key`) missing from the file. Only use it when the user asks
    for it in that turn, and show the deletion list first.
 5. **Public means public.** Making an SLO public, publishing an
    incident, or changing page access affects what visitors see
@@ -63,20 +63,21 @@ one YAML document. The loop:
 The same loop works from a terminal or CI with the CLI:
 
 ```bash
-observer export > observer.yaml
+observer export --format yaml -o observer.yaml
 observer apply -f observer.yaml --dry-run
 observer apply -f observer.yaml
 ```
 
 Keys and identity: resources carry a stable `key` field; apply matches
 on it. Resources created in the console (no key) are never touched by
-apply, and are only deleted by prune.
+apply or prune.
 
 ## Where to read documentation
 
-- Full corpus, one file: https://docs.use.observer/llms-full.txt
-- Table of contents: https://docs.use.observer/llms.txt
-- MCP tool catalog with scopes: https://docs.use.observer/docs/mcp
+- Table of contents, one Markdown link per page: https://docs.use.observer/llms.txt
+- Any page as raw Markdown: append `.md` to its path, for example
+  https://docs.use.observer/docs/mcp/index.md
+- MCP tool catalog with scopes: https://docs.use.observer/docs/mcp/index
 
 ## Common tasks
 
