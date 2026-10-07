@@ -1,6 +1,6 @@
 ---
 name: observer
-description: Operate Observer (metrics-driven status pages) via its MCP server and CLI. Use when the user asks about their status page, metrics, services, SLOs, error budgets, incidents, maintenance windows, wants to change Observer configuration, or wants to set up or connect to Observer (including when they have no account or API key yet). Covers connecting with the device flow, reading state, writing incidents, and the export/apply config-as-code loop.
+description: Operate Observer (metrics-driven status pages) via its MCP server and CLI. Use when the user asks about their status page, metrics, services, SLOs, error budgets, incidents, maintenance windows, Observer Agents, wants to change Observer configuration, or wants to set up or connect to Observer (including when they have no account or API key yet). Covers connecting with the device flow, the setup sequence (account check, creating and installing the Observer Agent, config apply, sharing the page), diagnosing metrics with no data, reading state, and the export/apply config-as-code loop.
 ---
 
 # Observer
@@ -64,8 +64,8 @@ their password.
    ```
 
    Other clients take the same URL and header in their MCP config.
-   Then confirm with `exportConfig` or `listMetrics`. Some clients only
-   load new servers after a restart; tell the user if so.
+   Then confirm with `getMe`. Some clients only load new servers after
+   a restart; tell the user if so.
 
 If you cannot make HTTP requests, or the flow fails, send the user to
 `https://use.observer/connect?client=<client>` instead. After approving
@@ -73,9 +73,13 @@ they see the key once with a ready-made MCP config; ask them to paste
 the key (or add the config themselves).
 
 A key from this flow has a fixed preset: `read:config`,
-`write:config`, `read:services`, `read:metrics`, `read:slos`,
-`read:incidents`. That covers the config-as-code loop and reading
-state. It does not include `write:incidents`, `write:maintenances`,
+`write:config`, `read:agents`, `write:agents`, `read:services`,
+`read:metrics`, `read:slos`, `read:incidents`. That covers the
+config-as-code loop, per-object delete, status page reads, creating
+and checking Observer Agents, and reading state. Keys from before
+agents were added to the preset lack `read:agents` and `write:agents`;
+if an agent tool fails with a scope error, ask the user to run the
+connect flow again. It does not include `write:incidents`, `write:maintenances`,
 `write:metrics`, `write:change_events`, or `read:sla`; for those, ask
 the user to create a key with the extra scopes under Settings, API
 keys. The user revokes the key there too (it is named after the
@@ -83,11 +87,61 @@ client, for example `Claude Code (agent connect)`).
 
 Full reference: https://docs.use.observer/docs/mcp/connect-ai-agent
 
+## Setting Observer up
+
+Follow this order when the user asks you to set Observer up or add
+monitoring. Skip steps whose result you already have.
+
+1. **`getMe` first.** It needs no scope and returns the key's scopes,
+   the plan (and `trial_ends_at` during a Starter trial), quotas as
+   `used` and `limit` for agents, metrics, services, SLOs and status
+   pages, and the rate limits. Plan around the limits instead of
+   finding them through failed calls.
+2. **Get an Observer Agent, if the metrics need one.** Every metric
+   except `source_type: heartbeat` and `manual` runs on an Observer
+   Agent inside the user's network.
+   - `listAgents` with `name` to reuse an existing agent. Names are
+     not unique in Observer, so reuse instead of creating duplicates.
+   - Otherwise `createAgent` with `{ "name": "..." }` (add
+     `prometheus_url` only when it will read PromQL). Each agent
+     counts toward the plan; a 403 `quota_exceeded` or
+     `feature_locked` is a plan limit, so tell the user and pass on
+     the upgrade link rather than retrying.
+   - The response carries `agent_key` exactly once, plus `install`
+     (`docker`, `compose`, `kubernetes`, `systemd`, `binary`, each
+     with the key already filled in and a `logs_command`) and `env`.
+     Ask which environment the user runs, give them that one snippet
+     to run, and do not store or repeat the key anywhere else. If it
+     is lost, `rotateAgentKey` issues a new one (the old key keeps
+     working for 24 hours unless `invalidate_immediately` is set).
+   - Poll `getAgent` until `status` changes from `never_connected` to
+     `online` (about a minute after the agent starts). If it stays
+     `never_connected`, ask the user to run the `logs_command`.
+3. **Dry-run, then apply.** Build the config document with each
+   metric's `agent` set to the agent's name. Run `applyConfig` with
+   dry-run, show the user the diff, then apply.
+4. **Share the page.** `listPages` returns each page's `public_url`
+   (the custom domain when one is active, else the subdomain URL)
+   and its `access_mode`. Give the user that URL.
+5. **Check the metrics.** Read them back with `listMetrics` or
+   `getMetric`. A metric in `no_data` carries `reason` (a stable code
+   such as `ECONNREFUSED` or `mtls_ref_missing`), `reason_label`, and
+   `reason_hint`. Use them to tell the user what to fix on the agent
+   host: usually an environment variable that a `*_ref` field in
+   `source_config` points at (connection strings, tokens, client
+   certificates are resolved on the host and never sent to Observer),
+   or network access from that host to the target. `agent_id` null
+   means no agent is assigned. `stale: true` means the agent has gone
+   quiet.
+
 ## Ground rules
 
-1. **Scopes are the boundary.** Every MCP tool requires a named scope
-   on the API key. A failed call names the missing scope; tell the
-   user to add it rather than retrying.
+1. **Scopes are the boundary.** Every MCP tool except `getMe`
+   requires a named scope on the API key. A failed call names the
+   missing scope; tell the user to add it rather than retrying. A 403
+   that is a plan limit (`quota_exceeded`, `feature_locked`,
+   `plan_does_not_permit_api`) is fixed by the plan, not by a key;
+   the error includes the upgrade link to pass on.
 2. **Read before write.** List and get before you create or patch.
    Ids are UUIDs; never guess one.
 3. **Dry-run before apply.** Configuration changes go through
@@ -97,7 +151,10 @@ Full reference: https://docs.use.observer/docs/mcp/connect-ai-agent
 4. **Never prune without instruction.** Apply with prune deletes
    config-managed resources (those with a `key`) missing from the file. Only use it when the user asks
    for it in that turn, and show the deletion list first.
-5. **Public means public.** Making an SLO public, publishing an
+5. **Agent keys are secrets.** `createAgent` and `rotateAgentKey`
+   return an `obs_live_` key once. Hand it to the user inside the
+   install command; never write it to files, logs, or memory.
+6. **Public means public.** Making an SLO public, publishing an
    incident, or changing page access affects what visitors see
    immediately. Confirm intent for these.
 
@@ -119,6 +176,14 @@ Full reference: https://docs.use.observer/docs/mcp/connect-ai-agent
   (`unknown_policy` on the slos entry) or the console.
 - `listIncidents` / `getIncident`, `listMaintenances` /
   `getMaintenance` — timeline state.
+- `listPages` / `getPage` — status pages with `public_url`,
+  `access_mode`, custom domain state, and (on `getPage`) their metrics
+  in display order.
+- `listAgents` / `getAgent` — Observer Agents, whether each is online,
+  last heartbeat, version, and how many metrics each runs.
+- Metric, service, SLO and page reads carry `config_key` and
+  `managed_by` (`config` or `console`); metric reads also carry
+  `agent_id` and the `reason` fields described above.
 - A metric can be healthy, degraded, unhealthy, no_data, or unknown.
   Status semantics, dwell windows, and how history bars are computed:
   https://docs.use.observer/docs/concepts/how-status-is-calculated
@@ -144,6 +209,31 @@ observer apply -f observer.yaml
 Keys and identity: resources carry a stable `key` field; apply matches
 on it. Resources created in the console (no key) are never touched by
 apply or prune.
+
+Agents: a metric's `agent` must be the exact name of an Observer Agent
+in the organization. Apply rejects the whole document (422
+`config_invalid`, with `errors` listing each `path` and `message`)
+when a name matches no agent or matches two. Create the agent first
+with `createAgent`, or fix the name. A metric whose source needs an
+agent but names none is accepted with a warning and gets no data.
+Heartbeat metrics must not name an agent. The diff shows the agent
+each metric resolved to.
+
+Pages: the document controls which metrics a page shows, their group
+and order. Per-metric settings edited in the console (public label,
+uptime bar) survive an apply. The diff lists page metrics `added`,
+`removed`, and `changed`.
+
+Deleting one object: `deleteMetric`, `deleteService`, `deleteSlo`, and
+`deletePage` take the object's id or its config key and need
+`write:config`. Only config-managed objects can be deleted (409
+`not_config_managed` otherwise). If others depend on it, the call
+returns 409 `in_use` with `referenced_by`; show the user what would
+go and only then repeat with `cascade=true`. A page with a custom
+domain returns 409 `custom_domain_attached` (remove the domain in the
+console first). Also remove the object from the config document, or
+the next apply re-creates it. Prefer this over prune when the user
+wants one thing gone.
 
 Plan and apply results carry a `warnings` list. Top-level keys that
 config does not manage (for example `incidents`, `maintenances`,
@@ -172,6 +262,12 @@ Relay warnings to the user instead of treating them as errors.
   exclusion is listed in compliance evidence packs. Alternatively set
   `unknown_policy: exclude` when the gaps are telemetry, not downtime.
 - "Add an HTTP check for api.example.com" — export, add a metric with
-  `source_type: http` and thresholds on response time, dry-run, apply.
-  The agent picks the new definition up in about 30 seconds (agent 1.6
-  and later; older agents within five minutes).
+  `source_type: http`, thresholds on response time, and `agent` set to
+  an existing agent's name (`listAgents`), dry-run, apply. The agent
+  picks the new definition up in about 30 seconds (agent 1.6 and
+  later; older agents within five minutes).
+- "Why does this metric show no data?" — `getMetric`, then explain
+  `reason_label` and `reason_hint`, name the environment variable or
+  network path to fix on the agent host, and check the agent with
+  `getAgent`.
+- "What is my status page URL?" — `listPages` and give `public_url`.

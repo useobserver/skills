@@ -11,7 +11,7 @@ say, never better) and annotate the history bars on the day they were
 posted.
 
 Keys created by the agent connect flow (see the `observer` skill)
-carry read scopes plus `write:config` only. If an incident or
+carry read scopes plus `write:config` and `write:agents` only. If an incident or
 maintenance call fails for a missing write scope, ask the user to
 create a key with `write:incidents` (and `write:maintenances`) under
 Settings, API keys; do not retry.
