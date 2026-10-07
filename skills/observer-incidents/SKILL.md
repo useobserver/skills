@@ -10,6 +10,12 @@ headline verdict while open (they can make it worse than the metrics
 say, never better) and annotate the history bars on the day they were
 posted.
 
+Keys created by the agent connect flow (see the `observer` skill)
+carry read scopes plus `write:config` only. If an incident or
+maintenance call fails for a missing write scope, ask the user to
+create a key with `write:incidents` (and `write:maintenances`) under
+Settings, API keys; do not retry.
+
 ## Lifecycle
 
 1. **Draft.** `draftIncidentFromMetric` pre-fills title, severity, and

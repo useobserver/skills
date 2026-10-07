@@ -17,6 +17,31 @@ apply configuration as code.
 ## Connect the MCP server
 
 Observer runs a remote MCP server at `https://mcp.use.observer/mcp`.
+
+### Let the agent connect itself
+
+The quickest way, even without an Observer account, is to paste this
+into your agent:
+
+```text
+Set up Observer for me. Instructions: https://use.observer/llms.txt
+```
+
+The agent starts a device-flow request (`POST /api/connect/device`),
+shows you a short code and a link, and waits while you sign up or sign
+in and approve. It then receives a scoped API key and configures the
+MCP server itself. Organizations on Free get a one-time 14-day Starter
+trial, with no card. The `observer` skill describes the flow step by
+step; the full reference is
+[Connect an AI agent](https://docs.use.observer/docs/mcp/connect-ai-agent).
+
+To get a key without the device flow, open
+`https://use.observer/connect?client=claude-code` (or `claude-desktop`,
+`cursor`, `codex`, `other`), approve, and copy the key and config the
+page shows once.
+
+### Configure by hand
+
 Create an `obs_pub_` API key in the console (Settings, API keys), grant
 only the scopes you need, and add the server to your client:
 
@@ -46,7 +71,7 @@ catalog: [MCP server documentation](https://docs.use.observer/docs/mcp/index).
 
 | Skill | What it teaches an agent |
 |---|---|
-| [`skills/observer`](skills/observer/SKILL.md) | The full working model: MCP tools, scope discipline, the config-as-code loop with the Observer CLI, and where to read documentation. |
+| [`skills/observer`](skills/observer/SKILL.md) | The full working model: connecting (device flow), MCP tools, scope discipline, the config-as-code loop with the Observer CLI, and where to read documentation. |
 | [`skills/observer-incidents`](skills/observer-incidents/SKILL.md) | The incident lifecycle: draft from a failing metric, publish, post updates, resolve. |
 
 To use a skill with Claude Code, copy its folder into `~/.claude/skills/`
