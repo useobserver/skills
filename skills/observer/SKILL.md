@@ -64,8 +64,14 @@ their password.
    ```
 
    Other clients take the same URL and header in their MCP config.
-   Then confirm with `getMe`. Some clients only load new servers after
-   a restart; tell the user if so.
+   Most clients only load a new MCP server after a restart, and a
+   restart ends the session (anything shown once, such as an agent
+   key, is lost). Before going further, ask the user which they
+   prefer: continue now over the REST API
+   (`https://use.observer/api/v1`, same key and operations), or
+   restart their client and continue with the MCP tools. Do not
+   create an Observer Agent and then restart. Confirm with `getMe`
+   either way.
 
 If you cannot make HTTP requests, or the flow fails, send the user to
 `https://use.observer/connect?client=<client>` instead. After approving
@@ -112,8 +118,13 @@ monitoring. Skip steps whose result you already have.
      with the key already filled in and a `logs_command`) and `env`.
      Ask which environment the user runs, give them that one snippet
      to run, and do not store or repeat the key anywhere else. If it
-     is lost, `rotateAgentKey` issues a new one (the old key keeps
-     working for 24 hours unless `invalidate_immediately` is set).
+     is lost before it was used, do not delete and recreate the agent:
+     confirm with `getAgent` that it has never connected (`status`
+     `never_connected`, `last_heartbeat_at` null), then call
+     `rotateAgentKey`. Never rotate the key of an agent that has
+     connected without asking the user, since its running install
+     still uses the old key (which keeps working for 24 hours unless
+     `invalidate_immediately` is set).
    - Poll `getAgent` until `status` changes from `never_connected` to
      `online` (about a minute after the agent starts). If it stays
      `never_connected`, ask the user to run the `logs_command`.
