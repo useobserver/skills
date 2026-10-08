@@ -125,6 +125,19 @@ monitoring. Skip steps whose result you already have.
      connected without asking the user, since its running install
      still uses the old key (which keeps working for 24 hours unless
      `invalidate_immediately` is set).
+   - Before handing over the snippet, ask whether the agent host
+     reaches the internet through a proxy, a TLS-intercepting proxy
+     or a private CA, or has restricted egress or no access to public
+     registries. If so, read
+     https://docs.use.observer/agent/guides/restricted-networks and
+     add what it needs to the snippet: `HTTPS_PROXY`, `HTTP_PROXY`
+     and `NO_PROXY` (internal probe targets and Prometheus belong in
+     `NO_PROXY`), and `NODE_EXTRA_CA_CERTS` with the CA file mounted
+     into the container or present on the host. Never disable TLS
+     verification (`SKIP_SSL_VERIFICATION`,
+     `NODE_TLS_REJECT_UNAUTHORIZED=0`) as a workaround. The agent
+     only dials out to Observer Cloud on port 443; no inbound access
+     is needed.
    - Poll `getAgent` until `status` changes from `never_connected` to
      `online` (about a minute after the agent starts). If it stays
      `never_connected`, ask the user to run the `logs_command`.
