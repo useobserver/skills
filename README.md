@@ -19,6 +19,22 @@ configuration as code.
 
 Observer runs a remote MCP server at `https://mcp.use.observer/mcp`.
 
+### Connect with OAuth
+
+If your MCP client supports MCP authorization (OAuth), add the server
+with no header:
+
+```bash
+claude mcp add --transport http observer https://mcp.use.observer/mcp
+```
+
+The client opens a browser, you sign in, choose the organization and
+approve the listed scopes (an owner must approve), and the client
+receives its own tokens. Access tokens last an hour and refresh tokens
+rotate on every use. Each approval appears under Settings, API keys,
+where revoking it disconnects the client. Full reference:
+[Connect with OAuth](https://docs.use.observer/docs/mcp/oauth).
+
 ### Let the agent connect itself
 
 The quickest way, even without an Observer account, is to paste this
@@ -45,9 +61,10 @@ To get a key without the device flow, open
 `cursor`, `codex`, `other`), approve, and copy the key and config the
 page shows once.
 
-### Configure by hand
+### Configure by hand with an API key
 
-Create an `obs_pub_` API key in the console (Settings, API keys), grant
+API keys keep working for clients without OAuth support. Create an
+`obs_pub_` API key in the console (Settings, API keys), grant
 only the scopes you need, and add the server to your client:
 
 ```json
@@ -69,7 +86,8 @@ claude mcp add observer --transport http https://mcp.use.observer/mcp \
 ```
 
 Every tool maps one-to-one to a public API operation and is governed by
-the same key scopes and plan entitlement as the REST API.
+the same scopes and plan entitlement as the REST API, whether you
+connect with OAuth or an API key.
 
 ### Tools
 
@@ -82,6 +100,8 @@ the same key scopes and plan entitlement as the REST API.
 | Services and SLOs | `listServices`, `getService`, `deleteService`, `listSlos`, `getSlo`, `deleteSlo` |
 | SLA statements | `listSlaStatements`, `getSlaStatement` |
 | Incidents | `listIncidents`, `getIncident`, `createIncident`, `patchIncident`, `publishIncident`, `resolveIncident`, `appendIncidentMessage`, `draftIncidentFromMetric`, `deleteIncident` |
+| Incident evidence | `getIncidentImpact`, `draftIncidentUpdate` (never publishes), `addIncidentNote` and `listIncidentNotes` (internal only), `exportIncidentEvidence` (Business plan and up) |
+| Audit log | `listAuditLog` (Business plan and up) |
 | Maintenance | `listMaintenances`, `getMaintenance`, `createMaintenance`, `patchMaintenance`, `startMaintenance`, `completeMaintenance`, `cancelMaintenance` |
 | Config as code | `exportConfig`, `applyConfig` |
 | Change events | `createChangeEvent` |
@@ -96,8 +116,8 @@ objects. Scopes for each tool:
 
 | Skill | What it teaches an agent |
 |---|---|
-| [`skills/observer`](skills/observer/SKILL.md) | The full working model: connecting (device flow), the setup sequence (plan check, creating and installing the Observer Agent, dry-run and apply, sharing the page), diagnosing metrics with no data, scope discipline, the config-as-code loop with the Observer CLI, and where to read documentation. |
-| [`skills/observer-incidents`](skills/observer-incidents/SKILL.md) | The incident lifecycle: draft from a failing metric, publish, post updates, resolve. |
+| [`skills/observer`](skills/observer/SKILL.md) | The full working model: connecting (OAuth, or the device flow), the setup sequence (plan check, creating and installing the Observer Agent, dry-run and apply, sharing the page), diagnosing metrics with no data, scope discipline, the config-as-code loop with the Observer CLI, and where to read documentation. |
+| [`skills/observer-incidents`](skills/observer-incidents/SKILL.md) | The incident lifecycle: draft from a failing metric, publish, post updates, resolve; reading the measured impact, AI drafts that never publish, internal notes with source attribution, and the signed evidence export. |
 
 To use a skill with Claude Code, copy its folder into `~/.claude/skills/`
 (or your project's `.claude/skills/`). Other agent frameworks can ingest

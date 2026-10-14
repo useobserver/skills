@@ -1,6 +1,6 @@
 ---
 name: observer
-description: Operate Observer (metrics-driven status pages) via its MCP server and CLI. Use when the user asks about their status page, metrics, services, SLOs, error budgets, incidents, maintenance windows, Observer Agents, wants to change Observer configuration, or wants to set up or connect to Observer (including when they have no account or API key yet). Covers connecting with the device flow, the setup sequence (account check, creating and installing the Observer Agent, config apply, sharing the page), diagnosing metrics with no data, reading state, and the export/apply config-as-code loop.
+description: Operate Observer (metrics-driven status pages) via its MCP server and CLI. Use when the user asks about their status page, metrics, services, SLOs, error budgets, incidents, maintenance windows, Observer Agents, the audit log, wants to change Observer configuration, or wants to set up or connect to Observer (including when they have no account or API key yet). Covers connecting with OAuth or the device flow, the setup sequence (account check, creating and installing the Observer Agent, config apply, sharing the page), diagnosing metrics with no data, reading state, and the export/apply config-as-code loop.
 ---
 
 # Observer
@@ -13,12 +13,55 @@ side through the MCP server or the CLI.
 ## Connecting
 
 If the `observer` MCP server is already configured and its tools
-work, skip this section.
+work, skip this section. Never ask the user for their password.
 
-If the user has no Observer account or no API key, connect through
-the device flow. It is the preferred path: the user approves one link
-in their browser and you receive a scoped key. Never ask the user for
-their password.
+### Prefer OAuth when the MCP client supports it
+
+If you run in an MCP client that supports MCP authorization (OAuth),
+add the server with **no header**. The client handles sign-in; no
+key passes through you. For Claude Code:
+
+```bash
+claude mcp add --transport http observer https://mcp.use.observer/mcp
+```
+
+Other clients take the same URL with no `headers` in their MCP
+config. Then:
+
+1. The first call gets a 401, and the client opens a browser on
+   Observer's authorization page (in Claude Code, the user runs
+   `/mcp` and picks `observer`). Tell the user what to expect: sign up
+   or sign in, choose the organization, review the listed scopes,
+   select Approve. Only an organization owner can approve. An
+   organization on Free gets the same one-time 14-day Starter trial
+   as the device flow.
+2. Confirm with `getMe`.
+
+What to know:
+
+- With no specific scopes requested, the connection gets the same
+  preset as the device flow (see below). When a tool needs a scope
+  the connection lacks, the server answers 403 `insufficient_scope`
+  naming every missing scope. Clients with step-up authorization
+  reopen the approval page for those scopes; otherwise tell the user
+  which scopes are missing and fall back to an API key with them.
+- Access tokens last an hour and the client refreshes them itself;
+  refresh tokens rotate on every use. Never copy, print or store the
+  tokens.
+- Each approval appears as an API key named after the client (for
+  example `Claude Code (MCP OAuth)`) under Settings, API keys. Revoking
+  it there disconnects the client.
+- Adding a server usually needs a client restart, and a restart ends
+  the session. The same caution as in step 4 below applies.
+
+Reference: https://docs.use.observer/docs/mcp/oauth
+
+### Otherwise, the device flow
+
+If the client does not support OAuth, or you need a key for the REST
+API (`https://use.observer/api/v1`), connect through the device flow:
+the user approves one link in their browser and you receive a scoped
+API key.
 
 1. Start a request:
 
@@ -205,6 +248,13 @@ monitoring. Skip steps whose result you already have.
   in display order.
 - `listAgents` / `getAgent` — Observer Agents, whether each is online,
   last heartbeat, version, and how many metrics each runs.
+- `listAuditLog` (`read:audit`, Business plan and up) — the
+  organization's audit trail, newest first. Filter with `since`,
+  `until` and `action` (exact, or a prefix ending in `.` such as
+  `page.`); page with `cursor` set to the previous `next_cursor`
+  until it is null. A 403 `feature_locked` is the plan, not the key.
+- Incident evidence, AI drafts and internal notes are covered by the
+  `observer-incidents` skill.
 - Metric, service, SLO and page reads carry `config_key` and
   `managed_by` (`config` or `console`); metric reads also carry
   `agent_id` and the `reason` fields described above.
@@ -295,3 +345,8 @@ Relay warnings to the user instead of treating them as errors.
   network path to fix on the agent host, and check the agent with
   `getAgent`.
 - "What is my status page URL?" — `listPages` and give `public_url`.
+- "Send our Alertmanager / Grafana / Datadog / CloudWatch alerts to
+  Observer" — inbound alert sources are set up in the console (Alerts,
+  Inbound; Starter plan and up), not through the API. Point the user
+  there and at
+  https://docs.use.observer/docs/guides/inbound-alerts.
