@@ -95,8 +95,8 @@ connect with OAuth or an API key.
 |---|---|
 | Account | `getMe` (no scope needed) |
 | Observer Agents | `listAgents`, `getAgent`, `createAgent`, `rotateAgentKey`, `deleteAgent` |
-| Status pages | `listPages`, `getPage`, `deletePage` |
-| Metrics | `listMetrics`, `getMetric`, `getMetricHistory`, `setManualMetricStatus`, `getMetricHeartbeat`, `rotateMetricHeartbeatUrl`, `deleteMetric` |
+| Status pages | `listPages`, `getPage`, `updatePage`, `deletePage` |
+| Metrics | `listMetrics`, `getMetric`, `getMetricHistory`, `testProbe`, `getProbeTest`, `setManualMetricStatus`, `getMetricHeartbeat`, `rotateMetricHeartbeatUrl`, `deleteMetric` |
 | Services and SLOs | `listServices`, `getService`, `deleteService`, `listSlos`, `getSlo`, `deleteSlo` |
 | SLA statements | `listSlaStatements`, `getSlaStatement` |
 | Incidents | `listIncidents`, `getIncident`, `createIncident`, `patchIncident`, `publishIncident`, `resolveIncident`, `appendIncidentMessage`, `draftIncidentFromMetric`, `deleteIncident` |
@@ -106,8 +106,13 @@ connect with OAuth or an API key.
 | Config as code | `exportConfig`, `applyConfig` |
 | Change events | `createChangeEvent` |
 
-`createAgent` and `rotateAgentKey` return the agent key once, with
-install commands. The delete tools for metrics, services, SLOs and
+`createAgent` and `rotateAgentKey` return the agent key once, with the
+install command for the requested `target` (`docker`, `compose`,
+`kubernetes`, `systemd`, `launchd` or `binary`), or, with
+`delivery=claim`, a single-use console link that reveals the key
+instead. `testProbe` runs a draft check once on an agent and returns
+the value with its unit, without creating anything. `applyConfig`
+returns a compact diff (only what changes) by default. The delete tools for metrics, services, SLOs and
 pages take an id or a config key and only delete config-managed
 objects. Scopes for each tool:
 [MCP server documentation](https://docs.use.observer/docs/mcp/index).
@@ -116,7 +121,7 @@ objects. Scopes for each tool:
 
 | Skill | What it teaches an agent |
 |---|---|
-| [`skills/observer`](skills/observer/SKILL.md) | The full working model: connecting (OAuth, or the device flow), the setup sequence (plan check, creating and installing the Observer Agent, dry-run and apply, sharing the page), diagnosing metrics with no data, scope discipline, the config-as-code loop with the Observer CLI, and where to read documentation. |
+| [`skills/observer`](skills/observer/SKILL.md) | The full working model: connecting (OAuth, or the device flow), the setup sequence (plan and organization check, creating and installing the Observer Agent, testing each source, dry-run and apply, sharing the page), diagnosing metrics with no data, scope discipline, the config-as-code loop with the Observer CLI, and where to read documentation. |
 | [`skills/observer-incidents`](skills/observer-incidents/SKILL.md) | The incident lifecycle: draft from a failing metric, publish, post updates, resolve; reading the measured impact, AI drafts that never publish, internal notes with source attribution, and the signed evidence export. |
 
 To use a skill with Claude Code, copy its folder into `~/.claude/skills/`
