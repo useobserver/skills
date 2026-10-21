@@ -9,7 +9,13 @@
       "scopes": [
         "write:incidents"
       ],
-      "summary": "Attach an internal note (e.g. findings from another tool) to an incident; never published"
+      "summary": "Attach an internal note (e.g. findings from another tool) to an incident; never published",
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      }
     },
     {
       "name": "appendIncidentMessage",
@@ -18,7 +24,13 @@
       "scopes": [
         "write:incidents"
       ],
-      "summary": "Append a timeline message; type=Resolved auto-resolves the parent"
+      "summary": "Append a timeline message; type=Resolved auto-resolves the parent",
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true
+      }
     },
     {
       "name": "applyConfig",
@@ -27,7 +39,13 @@
       "scopes": [
         "write:config"
       ],
-      "summary": "Apply a config-as-code document (idempotent upsert by config_key)"
+      "summary": "Apply a config-as-code document (idempotent upsert by config_key)",
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
     },
     {
       "name": "cancelMaintenance",
@@ -36,7 +54,13 @@
       "scopes": [
         "write:maintenances"
       ],
-      "summary": "Cancel a maintenance before completion"
+      "summary": "Cancel a maintenance before completion",
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
     },
     {
       "name": "completeMaintenance",
@@ -45,7 +69,13 @@
       "scopes": [
         "write:maintenances"
       ],
-      "summary": "Manually transition an in-progress maintenance to completed"
+      "summary": "Manually transition an in-progress maintenance to completed",
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
     },
     {
       "name": "createAgent",
@@ -54,7 +84,13 @@
       "scopes": [
         "write:agents"
       ],
-      "summary": "Create an Observer Agent and get its key (shown once)"
+      "summary": "Create an Observer Agent and get its key (shown once)",
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      }
     },
     {
       "name": "createChangeEvent",
@@ -63,7 +99,13 @@
       "scopes": [
         "write:change_events"
       ],
-      "summary": "Ingest a deploy / commit / release event for status-transition correlation"
+      "summary": "Ingest a deploy / commit / release event for status-transition correlation",
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      }
     },
     {
       "name": "createIncident",
@@ -72,7 +114,13 @@
       "scopes": [
         "write:incidents"
       ],
-      "summary": "Create incident (draft or published)"
+      "summary": "Create incident (draft or published)",
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true
+      }
     },
     {
       "name": "createMaintenance",
@@ -81,7 +129,13 @@
       "scopes": [
         "write:maintenances"
       ],
-      "summary": "Schedule a maintenance window"
+      "summary": "Schedule a maintenance window",
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true
+      }
     },
     {
       "name": "deleteAgent",
@@ -90,7 +144,13 @@
       "scopes": [
         "write:agents"
       ],
-      "summary": "Delete an Observer Agent (its key stops working; its metrics are kept, unassigned)"
+      "summary": "Delete an Observer Agent (its key stops working; its metrics are kept, unassigned)",
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
     },
     {
       "name": "deleteIncident",
@@ -99,7 +159,13 @@
       "scopes": [
         "write:incidents"
       ],
-      "summary": "Soft-delete incident"
+      "summary": "Soft-delete incident",
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
     },
     {
       "name": "deleteMetric",
@@ -108,7 +174,13 @@
       "scopes": [
         "write:config"
       ],
-      "summary": "Delete a config-managed metric by id or config_key"
+      "summary": "Delete a config-managed metric by id or config_key",
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
     },
     {
       "name": "deletePage",
@@ -117,7 +189,13 @@
       "scopes": [
         "write:config"
       ],
-      "summary": "Delete a config-managed page by id or config_key"
+      "summary": "Delete a config-managed page by id or config_key",
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
     },
     {
       "name": "deleteService",
@@ -126,7 +204,13 @@
       "scopes": [
         "write:config"
       ],
-      "summary": "Delete a config-managed service by id or config_key"
+      "summary": "Delete a config-managed service by id or config_key",
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
     },
     {
       "name": "deleteSlo",
@@ -135,7 +219,13 @@
       "scopes": [
         "write:config"
       ],
-      "summary": "Delete a config-managed SLO by id or config_key"
+      "summary": "Delete a config-managed SLO by id or config_key",
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
     },
     {
       "name": "draftIncidentFromMetric",
@@ -144,7 +234,13 @@
       "scopes": [
         "write:incidents"
       ],
-      "summary": "Pre-fill a draft incident from the metric's current state (idempotent within 30 minutes)"
+      "summary": "Pre-fill a draft incident from the metric's current state (idempotent within 30 minutes)",
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
     },
     {
       "name": "draftIncidentUpdate",
@@ -153,7 +249,13 @@
       "scopes": [
         "write:incidents"
       ],
-      "summary": "Draft the next customer update with AI, plus the evidence appendix it was written against (never publishes)"
+      "summary": "Draft the next customer update with AI, plus the evidence appendix it was written against (never publishes)",
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": false
+      }
     },
     {
       "name": "exportConfig",
@@ -162,7 +264,13 @@
       "scopes": [
         "read:config"
       ],
-      "summary": "Export the org's config as a canonical apply document"
+      "summary": "Export the org's config as a canonical apply document",
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
     },
     {
       "name": "exportIncidentEvidence",
@@ -171,7 +279,13 @@
       "scopes": [
         "read:incidents"
       ],
-      "summary": "Signed incident evidence export (canonical JSON envelope, or PDF), verifiable on the public verify page"
+      "summary": "Signed incident evidence export (canonical JSON envelope, or PDF), verifiable on the public verify page",
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
     },
     {
       "name": "getAgent",
@@ -180,7 +294,13 @@
       "scopes": [
         "read:agents"
       ],
-      "summary": "Get an Observer Agent: status, whether it ever connected, heartbeats, metric count"
+      "summary": "Get an Observer Agent: status, whether it ever connected, heartbeats, metric count",
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
     },
     {
       "name": "getIncident",
@@ -189,7 +309,13 @@
       "scopes": [
         "read:incidents"
       ],
-      "summary": "Get incident"
+      "summary": "Get incident",
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
     },
     {
       "name": "getIncidentImpact",
@@ -198,7 +324,13 @@
       "scopes": [
         "read:incidents"
       ],
-      "summary": "Measured impact of an incident: window, affected services, checks and customers, SLO burn, related changes, observers"
+      "summary": "Measured impact of an incident: window, affected services, checks and customers, SLO burn, related changes, observers",
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
     },
     {
       "name": "getMaintenance",
@@ -207,14 +339,26 @@
       "scopes": [
         "read:maintenances"
       ],
-      "summary": "Get maintenance"
+      "summary": "Get maintenance",
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
     },
     {
       "name": "getMe",
       "method": "GET",
       "path": "/me",
       "scopes": [],
-      "summary": "Who this API key is: organization, scopes, plan, quotas with usage, rate limits"
+      "summary": "Who this API key is: organization, scopes, plan, quotas with usage, rate limits",
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
     },
     {
       "name": "getMetric",
@@ -223,7 +367,13 @@
       "scopes": [
         "read:metrics"
       ],
-      "summary": "Get metric by id"
+      "summary": "Get metric by id",
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
     },
     {
       "name": "getMetricHeartbeat",
@@ -232,7 +382,13 @@
       "scopes": [
         "read:metrics"
       ],
-      "summary": "Heartbeat schedule, state and recent pings (source_type heartbeat)"
+      "summary": "Heartbeat schedule, state and recent pings (source_type heartbeat)",
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
     },
     {
       "name": "getMetricHistory",
@@ -241,7 +397,13 @@
       "scopes": [
         "read:metrics"
       ],
-      "summary": "Aggregated metric values over a window (max 30 days)"
+      "summary": "Aggregated metric values over a window (max 30 days)",
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
     },
     {
       "name": "getPage",
@@ -250,7 +412,13 @@
       "scopes": [
         "read:config"
       ],
-      "summary": "Get a status page, with its metrics in display order"
+      "summary": "Get a status page, with its metrics in display order",
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
     },
     {
       "name": "getProbeTest",
@@ -260,7 +428,13 @@
         "write:metrics",
         "write:config"
       ],
-      "summary": "Get the result of a probe test that was still running (testProbe returned 202)"
+      "summary": "Get the result of a probe test that was still running (POST /metrics/test returned 202)",
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
     },
     {
       "name": "getService",
@@ -269,7 +443,13 @@
       "scopes": [
         "read:services"
       ],
-      "summary": "Get service by id"
+      "summary": "Get service by id",
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
     },
     {
       "name": "getSlaStatement",
@@ -278,7 +458,13 @@
       "scopes": [
         "read:sla"
       ],
-      "summary": "Get an SLA Ledger statement with its signed payload"
+      "summary": "Get an SLA Ledger statement with its signed payload",
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
     },
     {
       "name": "getSlo",
@@ -287,7 +473,13 @@
       "scopes": [
         "read:slos"
       ],
-      "summary": "Get SLO with latest burn event"
+      "summary": "Get SLO with latest burn event",
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
     },
     {
       "name": "listAgents",
@@ -296,7 +488,13 @@
       "scopes": [
         "read:agents"
       ],
-      "summary": "List Observer Agents and whether each is online"
+      "summary": "List Observer Agents and whether each is online",
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
     },
     {
       "name": "listAuditLog",
@@ -305,7 +503,13 @@
       "scopes": [
         "read:audit"
       ],
-      "summary": "List the organization's audit log, newest first (Business and Enterprise)"
+      "summary": "List the organization's audit log, newest first (Business and Enterprise)",
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
     },
     {
       "name": "listIncidentNotes",
@@ -314,7 +518,13 @@
       "scopes": [
         "read:incidents"
       ],
-      "summary": "List an incident's internal notes, oldest first"
+      "summary": "List an incident's internal notes, oldest first",
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
     },
     {
       "name": "listIncidents",
@@ -323,7 +533,13 @@
       "scopes": [
         "read:incidents"
       ],
-      "summary": "List incidents"
+      "summary": "List incidents",
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
     },
     {
       "name": "listMaintenances",
@@ -332,7 +548,13 @@
       "scopes": [
         "read:maintenances"
       ],
-      "summary": "List maintenances"
+      "summary": "List maintenances",
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
     },
     {
       "name": "listMetrics",
@@ -341,7 +563,13 @@
       "scopes": [
         "read:metrics"
       ],
-      "summary": "List metrics"
+      "summary": "List metrics",
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
     },
     {
       "name": "listPages",
@@ -350,7 +578,13 @@
       "scopes": [
         "read:config"
       ],
-      "summary": "List status pages with their public URL"
+      "summary": "List status pages with their public URL",
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
     },
     {
       "name": "listServices",
@@ -359,7 +593,13 @@
       "scopes": [
         "read:services"
       ],
-      "summary": "List services"
+      "summary": "List services",
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
     },
     {
       "name": "listSlaStatements",
@@ -368,7 +608,13 @@
       "scopes": [
         "read:sla"
       ],
-      "summary": "List SLA Ledger statements"
+      "summary": "List SLA Ledger statements",
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
     },
     {
       "name": "listSlos",
@@ -377,7 +623,13 @@
       "scopes": [
         "read:slos"
       ],
-      "summary": "List SLOs"
+      "summary": "List SLOs",
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
     },
     {
       "name": "patchIncident",
@@ -386,7 +638,13 @@
       "scopes": [
         "write:incidents"
       ],
-      "summary": "Patch incident (title, severity, affected services, visibility, customer targeting)"
+      "summary": "Patch incident (title, severity, affected services, visibility, customer targeting)",
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
     },
     {
       "name": "patchMaintenance",
@@ -395,7 +653,13 @@
       "scopes": [
         "write:maintenances"
       ],
-      "summary": "Edit maintenance (only allowed before actual_start_at is set)"
+      "summary": "Edit maintenance (only allowed before actual_start_at is set)",
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
     },
     {
       "name": "publishIncident",
@@ -404,7 +668,13 @@
       "scopes": [
         "write:incidents"
       ],
-      "summary": "Publish a draft incident"
+      "summary": "Publish a draft incident",
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
     },
     {
       "name": "resolveIncident",
@@ -413,7 +683,13 @@
       "scopes": [
         "write:incidents"
       ],
-      "summary": "Resolve an incident with optional final message"
+      "summary": "Resolve an incident with optional final message",
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
     },
     {
       "name": "rotateAgentKey",
@@ -422,7 +698,13 @@
       "scopes": [
         "write:agents"
       ],
-      "summary": "Issue a new agent key (shown once)"
+      "summary": "Issue a new agent key (shown once)",
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": false
+      }
     },
     {
       "name": "rotateMetricHeartbeatUrl",
@@ -431,7 +713,13 @@
       "scopes": [
         "write:metrics"
       ],
-      "summary": "Issue a new heartbeat ping URL (the old one stops working)"
+      "summary": "Issue a new heartbeat ping URL (the old one stops working)",
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": false
+      }
     },
     {
       "name": "setManualMetricStatus",
@@ -440,7 +728,13 @@
       "scopes": [
         "write:metrics"
       ],
-      "summary": "Set status on a manually-managed metric"
+      "summary": "Set status on a manually-managed metric",
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true
+      }
     },
     {
       "name": "startMaintenance",
@@ -449,7 +743,13 @@
       "scopes": [
         "write:maintenances"
       ],
-      "summary": "Manually transition a scheduled maintenance to in_progress"
+      "summary": "Manually transition a scheduled maintenance to in_progress",
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": true
+      }
     },
     {
       "name": "testProbe",
@@ -459,7 +759,13 @@
         "write:metrics",
         "write:config"
       ],
-      "summary": "Run a draft probe once and return the value it measures, without creating a metric"
+      "summary": "Run a draft probe once and return the value it measures, without creating a metric",
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": false,
+        "openWorldHint": true
+      }
     },
     {
       "name": "updatePage",
@@ -468,7 +774,13 @@
       "scopes": [
         "write:config"
       ],
-      "summary": "Change a status page's settings"
+      "summary": "Change a status page's settings",
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
     }
   ]
 }
