@@ -1,0 +1,31 @@
+{
+  "name": "useobserver",
+  "description": "Observer's official plugin for Claude Code: skills plus the Observer MCP server.",
+  "owner": {
+    "name": "Observer",
+    "url": "https://use.observer"
+  },
+  "plugins": [
+    {
+      "name": "observer",
+      "source": "./",
+      "description": "Status pages, checks, Observer Agents, SLOs, SLA reports, incidents and maintenance for Observer, with the Observer MCP server (OAuth) and skills that teach safe, read-before-write workflows.",
+      "category": "monitoring",
+      "skills": [
+        "./skills/observer",
+        "./skills/observer-agent",
+        "./skills/observer-checks",
+        "./skills/observer-config-as-code",
+        "./skills/observer-connect",
+        "./skills/observer-heartbeats",
+        "./skills/observer-incidents",
+        "./skills/observer-maintenance",
+        "./skills/observer-no-data",
+        "./skills/observer-setup",
+        "./skills/observer-sla-report",
+        "./skills/observer-slos",
+        "./skills/observer-status-page"
+      ]
+    }
+  ]
+}

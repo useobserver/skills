@@ -1,0 +1,23 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "observer",
+  "version": "2.0.0",
+  "description": "Status pages, checks, Observer Agents, SLOs, SLA reports, incidents and maintenance for Observer, with the Observer MCP server (OAuth) and skills that teach safe, read-before-write workflows.",
+  "author": {
+    "name": "Observer",
+    "url": "https://use.observer"
+  },
+  "homepage": "https://docs.use.observer/docs/mcp/index",
+  "repository": "https://github.com/useobserver/skills",
+  "license": "ISC",
+  "keywords": [
+    "observer",
+    "status-page",
+    "uptime",
+    "monitoring",
+    "slo",
+    "sla",
+    "incidents",
+    "mcp"
+  ]
+}
