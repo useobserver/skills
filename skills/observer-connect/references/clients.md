@@ -1,31 +1,28 @@
 # Client configuration
 
-Server URL: `https://mcp.use.observer/mcp` (full) or
+Server name `observer`. URL `https://mcp.use.observer/mcp` (full) or
 `https://mcp.use.observer/mcp/readonly` (read tools only). With OAuth, add the
 URL and nothing else; the client opens the browser for approval. With an API
 key, send `Authorization: Bearer <key>`.
 
-Never put a key into a file that is committed. Prefer user-level config or an
-environment variable reference.
+Never write a key into a config file. Have the user put it in an environment
+variable (for example `OBSERVER_API_KEY`) and reference that variable from the
+config, as in the examples below.
 
 ## Claude Code
 
 OAuth:
 
 ```bash
-claude mcp add --transport http --scope user observer https://mcp.use.observer/mcp
+claude mcp add --transport http observer https://mcp.use.observer/mcp
 ```
 
-Then run `/mcp` and choose `observer` to sign in.
+The default scope is `local` (this project, for this user only). Add
+`--scope user` to use it in every project, or `--scope project` to write a
+shared `.mcp.json`. Then sign in: run `/mcp` in a session and choose
+`observer`, or run `claude mcp login observer` from the shell.
 
-API key (kept in user settings, outside any repository):
-
-```bash
-claude mcp add --transport http --scope user observer https://mcp.use.observer/mcp \
-  --header "Authorization: Bearer <key>"
-```
-
-Shared project `.mcp.json`, key from the environment:
+API key, in a project `.mcp.json` that reads the key from the environment:
 
 ```json
 {
@@ -39,26 +36,27 @@ Shared project `.mcp.json`, key from the environment:
 }
 ```
 
-The Observer plugin (`/plugin marketplace add useobserver/skills`, then
-`/plugin install observer@useobserver`) adds the server with OAuth for you.
+The Observer plugin adds the server with OAuth for you:
+
+```text
+/plugin marketplace add useobserver/skills
+/plugin install observer@useobserver
+```
+
+From the shell: `claude plugin marketplace add useobserver/skills`, then
+`claude plugin install observer@useobserver`.
 
 ## Claude.ai and Claude Desktop
 
-OAuth: Settings, Connectors, Add custom connector, and paste
-`https://mcp.use.observer/mcp`. Connect it and approve in the browser.
+Free, Pro and Max: Customize > Connectors, then + Add > Add custom connector.
+Enter the name `observer` and the URL `https://mcp.use.observer/mcp`, select
+Continue, review the detected authentication, and select Add. The Free plan
+allows one custom connector.
 
-API key in `claude_desktop_config.json` (restart Claude Desktop after):
-
-```json
-{
-  "mcpServers": {
-    "observer": {
-      "command": "npx",
-      "args": ["mcp-remote", "https://mcp.use.observer/mcp", "--header", "Authorization: Bearer <key>"]
-    }
-  }
-}
-```
+Team and Enterprise: an Owner or Primary Owner (on Enterprise also a custom
+role with "Manage access to Libraries") adds it under Organization settings >
+Connectors > Add: hover Custom and select Web. Members then connect it under
+Customize > Connectors > Connect.
 
 ## Cursor
 
@@ -69,28 +67,45 @@ cursor://anysphere.cursor-deeplink/mcp/install?name=observer&config=eyJ1cmwiOiJo
 ```
 
 The `config` value is the base64 of `{"url":"https://mcp.use.observer/mcp"}`.
+The same entry by hand, in `~/.cursor/mcp.json` (every project) or
+`.cursor/mcp.json` (one project):
 
-API key in `~/.cursor/mcp.json` (user config). In a project `.cursor/mcp.json`
-use `"Bearer ${env:OBSERVER_API_KEY}"` instead of the literal key:
+```json
+{
+  "mcpServers": {
+    "observer": { "url": "https://mcp.use.observer/mcp" }
+  }
+}
+```
+
+API key, read from the environment:
 
 ```json
 {
   "mcpServers": {
     "observer": {
       "url": "https://mcp.use.observer/mcp",
-      "headers": { "Authorization": "Bearer <key>" }
+      "headers": { "Authorization": "Bearer ${env:OBSERVER_API_KEY}" }
     }
   }
 }
 ```
 
-## VS Code
+## VS Code (GitHub Copilot)
+
+Install link (`vscode-insiders:` instead of `vscode:` for Insiders):
+
+```text
+vscode:mcp/install?%7B%22name%22%3A%22observer%22%2C%22type%22%3A%22http%22%2C%22url%22%3A%22https%3A%2F%2Fmcp.use.observer%2Fmcp%22%7D
+```
+
+Or from the command line:
 
 ```bash
 code --add-mcp '{"name":"observer","type":"http","url":"https://mcp.use.observer/mcp"}'
 ```
 
-Or in `.vscode/mcp.json`:
+Or in `.vscode/mcp.json` (the top-level key is `servers`):
 
 ```json
 {
@@ -100,7 +115,9 @@ Or in `.vscode/mcp.json`:
 }
 ```
 
-## Codex
+OAuth runs in the browser the first time VS Code connects.
+
+## Codex CLI
 
 OAuth:
 
@@ -109,16 +126,26 @@ codex mcp add observer --url https://mcp.use.observer/mcp
 codex mcp login observer
 ```
 
-API key, read from an environment variable so it stays out of
-`~/.codex/config.toml`:
+The same entry in `~/.codex/config.toml`:
 
 ```toml
 [mcp_servers.observer]
 url = "https://mcp.use.observer/mcp"
-bearer_token_env_var = "OBSERVER_API_KEY"
 ```
 
+API key, read from an environment variable: add
+`bearer_token_env_var = "OBSERVER_API_KEY"` to that table.
+
 ## Gemini CLI
+
+```bash
+gemini mcp add --transport http observer https://mcp.use.observer/mcp
+```
+
+The default scope is the project; add `-s user` for every project. Then run
+`/mcp auth observer` in a session to sign in. OAuth needs a browser on the
+same machine, so it fails over SSH or on a headless host. In `settings.json`
+the entry uses `httpUrl`:
 
 ```json
 {
@@ -128,12 +155,12 @@ bearer_token_env_var = "OBSERVER_API_KEY"
 }
 ```
 
-Gemini CLI discovers OAuth from the server's 401 response. The Observer
-extension (`gemini extensions install https://github.com/useobserver/skills`)
-adds this entry for you.
+The Observer extension (`gemini extensions install https://github.com/useobserver/skills`)
+adds this entry and the skills for you.
 
 ## Any other client
 
 Use a remote (Streamable HTTP) server with the URL above. If the client has no
-OAuth support, add the `Authorization: Bearer <key>` header and get the key
-from `https://use.observer/connect?client=other`.
+OAuth support, send the `Authorization: Bearer <key>` header from an
+environment variable and get the key from
+`https://use.observer/connect?client=other`.

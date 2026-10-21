@@ -32,8 +32,9 @@ Report: what is failing, since when, which services, and any open incident.
 1. **Draft.**
    - From a failing metric: `draftIncidentFromMetric` with `metricId`. It
      pre-fills title, severity and affected services and is idempotent: it
-     returns the existing draft when one with the same title was made in the
-     last 30 minutes, or one affecting the same services in the last 60.
+     returns the existing unpublished draft with the same title from the
+     last 30 minutes, or any unresolved incident (draft or published)
+     affecting the same services from the last 60 minutes.
    - Otherwise: `createIncident` with `title`, `severity` (`minor`, `major`,
      `critical`), `affected_services` (service ids from `listServices`), and
      `publish: false`.
@@ -70,9 +71,9 @@ customer targeting and `postmortem_url`. Omitted fields keep their values.
   means gaps in the record; say so.
 - **`draftIncidentUpdate`**: an AI draft of the next customer update with the
   evidence it used. It never publishes. Optional `status` and `severity`.
-  `draft` can be null with a `reason` (`not_entitled`, `budget_exceeded`,
-  `rate_limited`, `invalid_output`); then write the update yourself from the
-  impact. Show the draft, let the user edit it, and post it with
+  `draft` can be null with a `reason` (for example `not_entitled`,
+  `budget_exceeded`, `rate_limited`, `invalid_output`, `timeout`); then write
+  the update yourself from the impact. Show the draft, let the user edit it, and post it with
   `appendIncidentMessage` only after they approve. Never chain draft and post
   in one step.
 - **`addIncidentNote`**: internal findings, `{ "source": "...", "body": "..." }`.

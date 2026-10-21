@@ -25,7 +25,8 @@ key under Developers > API keys). Do not retry.
 3. **Confirm, then create.** `createMaintenance` publishes the window
    immediately: it appears on the status page (as a banner within 24 hours of
    the start) and subscribers receive `maintenance.scheduled`, then
-   `maintenance.starting_soon` one hour before the start. Get an explicit yes
+   `maintenance.starting_soon` within the hour before the start (at once
+   for a window created less than an hour ahead). Get an explicit yes
    for the text and times first.
 
    ```json

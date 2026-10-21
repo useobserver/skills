@@ -26,7 +26,7 @@ Reads CPU, memory, disk, network or load from the host the agent runs on. No end
 
 ## Rules
 
-- Linux gives the fullest values. On macOS memory values are coarser and `network` reports `no_data`.
+- `network` works on Linux only; elsewhere it reports `no_data` with reason `host_metric_unsupported_platform`. `load` reports the same on Windows.
 
 ## Example
 

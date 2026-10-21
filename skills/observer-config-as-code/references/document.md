@@ -12,12 +12,12 @@ Keys match `^[a-z0-9][a-z0-9-]{0,62}$` and identify an object across applies.
 | `description` | no | |
 | `source_type` | yes | See the observer-checks skill for every type |
 | `source_config` | yes | Shape depends on `source_type`. Secrets are env var names (`*_ref`) |
-| `thresholds` | on create | `healthy_operation`, `healthy_value`, `unhealthy_operation`, `unhealthy_value`. Operators `over` (>), `under` (<), `equal` (=). Not used by heartbeat, manual and alert metrics |
-| `agent` | most types | Exact name of an Observer Agent. Not allowed on heartbeat metrics |
+| `thresholds` | on create | `healthy_operation`, `healthy_value`, `unhealthy_operation`, `unhealthy_value`. Operators `over` (>), `under` (<), `equal` (=). Not required for heartbeat, manual and alert metrics; heartbeat and alert metrics derive their own |
+| `agent` | most types | Exact name of an Observer Agent. Not allowed on heartbeat or alert metrics |
 | `interval` | no | Minutes, 1 to 60, default 1 |
 | `interval_agent_push` | no | Minutes, 5 to 60, default 15; at least 10 on Free and Starter |
-| `dwell_seconds_to_breach` | no | Seconds, 0 to 3600, default 180 |
-| `dwell_seconds_to_recover` | no | Seconds, 0 to 3600, default 300 |
+| `dwell_seconds_to_breach` | no | Seconds, 0 to 3600, default 180 (0 for new heartbeat and alert metrics) |
+| `dwell_seconds_to_recover` | no | Seconds, 0 to 3600, default 300 (0 for new heartbeat and alert metrics) |
 
 ## services[]
 
@@ -47,7 +47,7 @@ Keys match `^[a-z0-9][a-z0-9-]{0,62}$` and identify an object across applies.
 |---|---|---|
 | `key` | yes | |
 | `subdomain` | yes | `^[a-z0-9-]{3,32}$`, globally unique: `<subdomain>.use.observer` |
-| `metrics` | no | References in display order, or `{ metric, group, order }` |
+| `metrics` | no | References in display order, or `{ metric, group, order }`. The exact list of the page's metrics: leaving it out removes every metric from the page |
 | settings | no | `title`, `layout`, `timezone`, `locale`, `allow_subscriptions`, `show_auto_refresh`, `hide_branding`, `footer_links`, `metric_group_order`, `metric_group_summary`, `seo_description`, `seo_noindex`, `theme: { preset }`, and `access_mode: public` only. See the observer-status-page skill |
 
 Settings left out of a page entry keep their current value.
@@ -61,7 +61,8 @@ the first six characters of its id (for example `checkout-latency-3f9a1c`).
 
 ## Result
 
-`applyConfig` returns `summary` (counts), `diff` per bucket with an `action`
+`applyConfig` returns `dry_run`, `pruned`, `verbose`, `summary` (counts),
+`diff` per bucket (metrics, services, SLOs, pages) with an `action`
 of `create`, `update`, `unchanged` or `prune` per entry (metric entries show
 the resolved `agent`; service entries show member metrics `added` and
 `removed`; page entries show metrics `added`, `removed`, `changed` and the

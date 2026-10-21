@@ -24,8 +24,8 @@ Resolves a name and reports the resolve time in milliseconds.
 
 ## Rules
 
-- `expected_value` makes the check fail when the answer does not contain it.
-- `resolver` sends the query to a specific DNS server instead of the host's default.
+- With `expected_value`, a sample where no returned record contains that text reports `no_data` with reason `expected_value_mismatch`.
+- `resolver` is the IP address of a DNS server to query instead of the host's default.
 
 ## Example
 

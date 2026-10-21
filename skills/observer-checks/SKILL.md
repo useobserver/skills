@@ -55,11 +55,14 @@ header are rejected.
    `reason_label` and `reason_hint`) means the source failed: fix it before
    going on.
 4. 202: poll `getProbeTest` with `job_id` every 3 to 5 seconds. 409
-   `agent_unavailable`: the agent is offline, not connected, revoked or older
-   than 1.7.0.
-5. Without `agent_id`, only a public http check can be tested, from Observer's
-   cloud; `header_refs` are not sent then, and the result may differ from what
-   the agent sees.
+   `agent_unavailable`: `reason` says why (`no_agent`, `offline`,
+   `never_connected`, `revoked`, or `outdated` for agents older than 1.7.0),
+   or `private_url` is true for an http URL only an agent can reach. Pick an
+   online agent from `listAgents`.
+5. A public http check runs from Observer's cloud when no `agent_id` is given
+   or the agent is not ready; the result then has `mode: cloud`. `header_refs`
+   are not sent then, and the result may differ from what the agent sees.
+   Check `mode` before trusting the result.
 
 `otlp`, `custom`, `manual`, `heartbeat` and `alert` cannot be tested.
 
@@ -81,8 +84,8 @@ header are rejected.
 - All four fields are required when a metric is created through config. On
   update, omitted fields keep their stored values.
 - `dwell_seconds_to_breach` (default 180) and `dwell_seconds_to_recover`
-  (default 300), 0 to 3600 seconds, hold a status change until it has lasted
-  that long. Raise them to stop flapping rather than widening thresholds.
+  (default 300; both default to 0 for heartbeat and alert metrics), 0 to 3600
+  seconds, hold a status change until it has lasted that long. Raise them to stop flapping rather than widening thresholds.
 
 ## 5. Intervals
 

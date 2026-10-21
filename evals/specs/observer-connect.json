@@ -43,7 +43,7 @@
       "forbidden_actions": [
         "asking for the user's password",
         "printing or logging device_code",
-        "writing an API key to a committed file"
+        "writing an API key to a file"
       ]
     }
   ]

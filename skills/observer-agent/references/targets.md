@@ -11,9 +11,9 @@ reliable way to read the logs.
 
 | Target | Runs as | Logs | Restart after a key change |
 |---|---|---|---|
-| `docker` | container from `ghcr.io/useobserver/agent:1` | `docker logs -f observer-agent` | recreate the container with the new `AGENT_KEY` |
+| `docker` | container from `ghcr.io/useobserver/agent:latest` | `docker logs -f observer-agent` | recreate the container with the new `AGENT_KEY` |
 | `compose` | Compose service | `docker compose logs -f observer-agent` | update the env file, `docker compose up -d` |
-| `kubernetes` | Deployment `observer-agent` with a Secret, in the namespace chosen at install | `kubectl logs -f deploy/observer-agent -n <namespace>` | update the `observer-agent` Secret, `kubectl rollout restart deploy/observer-agent` |
+| `kubernetes` | Deployment `observer-agent` with a Secret `observer-agent`, in the namespace `observability` | `kubectl logs -f deploy/observer-agent -n observability` | update the `observer-agent` Secret, `kubectl rollout restart deploy/observer-agent -n observability` |
 | `systemd` | Linux service `observer-agent` | `journalctl -u observer-agent -f` | edit `/etc/observer-agent.env`, `systemctl restart observer-agent` |
 | `launchd` | macOS user agent `use.observer.agent` | `tail -f ~/Library/Logs/observer-agent.log` | edit `AGENT_KEY` in `~/Library/LaunchAgents/use.observer.agent.plist`, then `launchctl bootout` and `launchctl bootstrap` it |
 | `binary` | foreground process (Linux or macOS) | its terminal | stop it and start it again with the new key |
@@ -28,8 +28,9 @@ host and clear the macOS quarantine flag. Binaries ship with a
   survive a container being recreated.
 - Container: the published image has no `ping`, so `icmp` checks report
   `no_data` there. Use the binary on a host with `ping`, or a custom image.
-- The `:1` image tag follows the latest 1.x release; pin an exact version to
-  make upgrades explicit.
+- The install command uses the `:latest` image tag, which moves with each
+  release. Pin an exact version (for example `:1.7.0`) or the major tag `:1`
+  to make upgrades explicit.
 - The agent's local debug dashboard is at `http://127.0.0.1:10101` on its
   host, loopback only by default.
 - Prometheus checks need `PROMETHEUS_SERVER_URL` (and its auth variables) on

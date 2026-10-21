@@ -34,7 +34,11 @@ Document schema: [references/document.md](references/document.md).
 
 If the apply fails: 422 `config_invalid` carries `errors` with a `path` and
 `message` each (for example `metrics[0].thresholds.healthy_value`). Fix those
-and plan again. A plan limit is a 403 with an upgrade link; do not retry.
+and plan again. Plan limits (a quota, the push interval floor, a page
+setting the plan lacks) also come back as 422 `config_invalid` errors: tell
+the user instead of retrying. A 403 `plan_does_not_permit_api` means the plan
+has no API access; a 403 `item_suspended_plan` means the document changes
+items suspended for being over a plan limit.
 
 ## Rules that catch people out
 
@@ -46,7 +50,8 @@ and plan again. A plan limit is a 403 with an upgrade link; do not retry.
   hint that it looks like seconds.
 - **`agent` is an exact agent name.** A name matching no agent, or two, fails
   the whole document. A metric that needs an agent but names none is accepted
-  with a warning and gets no data. Heartbeat metrics must not name one.
+  with a warning and gets no data. Heartbeat and alert metrics must not name
+  one.
 - **`services[].metrics` is the exact member set** when present (`[]`
   removes all members); omit it to leave members alone. A service's metrics
   are its members plus the metrics its SLOs measure.

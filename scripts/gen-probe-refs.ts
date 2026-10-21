@@ -49,10 +49,10 @@ interface Note {
 const NOTES: Record<string, Note> = {
   prometheus: {
     title: "Prometheus (PromQL)",
-    summary: "Runs a PromQL instant query on the agent and reports the scalar result. The agent reads `PROMETHEUS_SERVER_URL` (and its auth variables) from its own environment unless `prometheus_url` is set here.",
+    summary: "Runs a PromQL instant query on the agent and reports the scalar result. The agent queries `prometheus_url` when it is set here, otherwise `PROMETHEUS_SERVER_URL` from its own environment. Prometheus auth always comes from the agent's environment variables.",
     rules: [
       "The query must return a single number. A query that returns no series reports `no_data` with reason `no_data_for_query`.",
-      "Create the agent with `prometheus_url` (or set `PROMETHEUS_SERVER_URL` on the host) when it reads PromQL.",
+      "Set `PROMETHEUS_SERVER_URL` on the agent host, or set `prometheus_url` here. `prometheus_url` on createAgent only fills that variable into the install command.",
     ],
     example: { query: 'sum(rate(http_requests_total{job="api",code=~"5.."}[5m])) / sum(rate(http_requests_total{job="api"}[5m])) * 100' },
   },
@@ -61,7 +61,7 @@ const NOTES: Record<string, Note> = {
     summary: "Sends one request and reports the response time in milliseconds, or, with `json_path`, a number read from the JSON response.",
     rules: [
       "`url` must be http or https and must not carry `user:pass@`. Put credentials in `header_refs`.",
-      "`headers` are stored by Observer, so a header whose name looks like a credential (Authorization, Cookie, anything with token, secret, key, auth, session) is rejected there. Map it in `header_refs` to an env var name on the agent host instead.",
+      "`headers` are stored by Observer, so a header whose name looks like a credential is rejected there: Authorization, Proxy-Authorization, Cookie, Set-Cookie, X-Api-Key, Api-Key, Apikey, any name containing token, secret, password, passwd, auth or session, and any name ending in key. Map it in `header_refs` to an env var name on the agent host instead.",
       "A header name may not appear in both `headers` and `header_refs`.",
       "Mutual TLS: set `client_cert_ref` and `client_key_ref` together (env vars holding PEM text or a path to a PEM file). `ca_cert_ref` is optional.",
       "`expected_status` takes one code or a list. A different status reports `no_data` with an `unexpected_status:<code>` reason.",
@@ -78,7 +78,7 @@ const NOTES: Record<string, Note> = {
   dns: {
     title: "DNS resolution",
     summary: "Resolves a name and reports the resolve time in milliseconds.",
-    rules: ["`expected_value` makes the check fail when the answer does not contain it.", "`resolver` sends the query to a specific DNS server instead of the host's default."],
+    rules: ["With `expected_value`, a sample where no returned record contains that text reports `no_data` with reason `expected_value_mismatch`.", "`resolver` is the IP address of a DNS server to query instead of the host's default."],
     example: { domain: "api.example.com", record_type: "A" },
   },
   icmp: {
@@ -124,9 +124,9 @@ const NOTES: Record<string, Note> = {
     summary: "Runs one read-only query against Postgres, MySQL, Redis or MongoDB and reports the single number it returns.",
     rules: [
       "`connection_string_ref` is the name of an env var on the agent host holding the full connection URL. The URL never reaches Observer. Use a read-only database user.",
-      "postgres and mysql: one SELECT (or WITH ... SELECT) statement returning one row with one column. No semicolons, no writes.",
+      "postgres and mysql: one SELECT (or WITH ... SELECT) statement returning one row with one column. A trailing semicolon is allowed, a second statement is not. No writes.",
       "redis: one read-only command from this list: __REDIS__.",
-      'mongodb: a JSON spec using `countDocuments` or `estimatedDocumentCount`, for example `{"db":"shop","collection":"orders","op":"countDocuments","filter":{"status":"pending"}}`. `$where`, `$function`, `$accumulator` and `$expr` are rejected.',
+      'mongodb: a JSON spec using `countDocuments` or `estimatedDocumentCount`, for example `{"db":"shop","collection":"orders","op":"countDocuments","filter":{"status":"pending"}}`. `estimatedDocumentCount` takes no `filter`. `$where`, `$function`, `$accumulator` and `$expr` are rejected, and so are the `admin`, `config` and `local` databases and `system.*` collections.',
     ],
     example: { kind: "postgres", connection_string_ref: "OBSERVER_PG_DSN", query: "SELECT count(*) FROM jobs WHERE state = 'failed' AND created_at > now() - interval '15 minutes'" },
   },
@@ -179,7 +179,7 @@ const NOTES: Record<string, Note> = {
     title: "Host vitals",
     summary: "Reads CPU, memory, disk, network or load from the host the agent runs on. No endpoint and no credentials.",
     rules: [
-      "Linux gives the fullest values. On macOS memory values are coarser and `network` reports `no_data`.",
+      "`network` works on Linux only; elsewhere it reports `no_data` with reason `host_metric_unsupported_platform`. `load` reports the same on Windows.",
     ],
     example: { metric: "filesystem", mountpoint: "/" },
   },

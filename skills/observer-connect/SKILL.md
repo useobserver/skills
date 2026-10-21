@@ -28,14 +28,16 @@ or keys beyond what a step below says.
 1. Add the server with no `Authorization` header. Claude Code:
 
    ```bash
-   claude mcp add --transport http --scope user observer https://mcp.use.observer/mcp
+   claude mcp add --transport http observer https://mcp.use.observer/mcp
    ```
 
-   Other clients take the same URL in their remote MCP config; some also need
-   `"type": "http"`. Per-client lines are in
-   [references/clients.md](references/clients.md).
-2. Tell the user what happens next: the first call opens a browser on
-   Observer's approval page (in Claude Code, run `/mcp` and pick `observer`).
+   That adds it for the current project only (scope `local`); add
+   `--scope user` for every project. Other clients take the same URL in their
+   remote MCP config. Per-client steps, including Claude.ai, Cursor, VS Code,
+   Codex and Gemini CLI, are in [references/clients.md](references/clients.md).
+2. Tell the user what happens next: signing in opens a browser on Observer's
+   approval page (in Claude Code, run `/mcp` and pick `observer`, or run
+   `claude mcp login observer` from the shell).
    They sign in or sign up, choose the organization, review the listed
    scopes and select Approve. Only an organization owner can approve.
 3. Verify: call `getMe` and report the organization, plan and scopes.
@@ -94,10 +96,10 @@ The user approves one link and you receive a scoped `obs_pub_` key.
    (`https://use.observer/api/v1`, same key and operations), or restart and
    continue with MCP tools. Do not create an Observer Agent and then
    restart: its key is shown once and would be lost.
-5. Add the server with the header `Authorization: Bearer <api_key>`. Prefer a
-   user-level config outside any repository (Claude Code `--scope user`), or
-   an environment variable reference. Never commit a file containing the
-   key. See [references/clients.md](references/clients.md).
+5. Add the server with the header `Authorization: Bearer <api_key>`, read
+   from an environment variable (for example `OBSERVER_API_KEY`) that the user
+   sets on their machine. Never write the key into a config file, a commit or
+   memory. See [references/clients.md](references/clients.md).
 6. Verify: `getMe` (or `GET /api/v1/me` over REST).
 
 ## Step C: manual key page
@@ -108,8 +110,8 @@ They can add the config themselves, or paste the key to you for step B.5.
 
 ## Step D: read-only endpoint
 
-`https://mcp.use.observer/mcp/readonly` offers only the tools that read and
-change nothing. Use it when the user wants analysis without any risk of a
+`https://mcp.use.observer/mcp/readonly` offers only the tools that change
+nothing and need only read scopes. Use it when the user wants analysis without any risk of a
 write. Write tools are not listed there at all, so to change something the
 user must also connect the full endpoint.
 

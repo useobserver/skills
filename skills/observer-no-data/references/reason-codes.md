@@ -9,7 +9,7 @@ https://docs.use.observer/agent/reference/reason-codes
 
 | Code | Meaning | Fix |
 |---|---|---|
-| `stale_agent_silent` | No samples for over 3 times the push interval | Agent stopped or cannot reach Observer; check `getAgent` and its logs |
+| `stale_agent_silent` | No samples for longer than 3 times the push interval (capped at 15 minutes, or push interval plus 1 minute when that is longer) | Agent stopped or cannot reach Observer; check `getAgent` and its logs |
 | `prometheus_url_missing` | The agent has no Prometheus server configured | Set `PROMETHEUS_SERVER_URL` on the agent, or `prometheus_url` in the config |
 | `invalid_prometheus_url` | `PROMETHEUS_SERVER_URL` is not a valid URL | Fix the agent's environment |
 | `custom_probe_not_found` | No custom probe registered under that name on this agent | Register it in the agent's code, or fix `probe_name` |

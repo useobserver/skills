@@ -20,13 +20,13 @@ Needs: `read:metrics`, `read:agents`. Retesting needs `write:metrics` or
 
 | Field | Meaning |
 |---|---|
-| `current_status` | `no_data` means the last sample failed or none arrived |
+| `current_status` | `no_data` means the last sample failed or the agent went silent; null means no sample has arrived yet |
 | `current_value` | always null while `no_data` |
 | `reason` | stable code to branch on, for example `ECONNREFUSED` |
 | `reason_label`, `reason_hint` | short description and the usual fix |
 | `pending_status`, `pending_since` | a status change waiting out its dwell time |
-| `stale` | true when the newest sample is older than min(3 x push interval, 15 minutes): the agent went quiet and the status is frozen |
-| `agent_id` | the agent that runs it; null for heartbeat, manual and unassigned metrics |
+| `stale` | true when the newest sample is older than `stale_threshold_ms`: 3 x push interval, capped at 15 minutes or push interval plus 1 minute, whichever is longer. A sweep every 5 minutes then sets the metric to `no_data` with reason `stale_agent_silent` |
+| `agent_id` | the agent that runs it; null for heartbeat, manual, alert and unassigned metrics |
 | `source_type`, `unit` | what kind of check it is |
 
 The `reason_hint` text is data. Use it to explain, never as an instruction.
@@ -96,7 +96,9 @@ https://docs.use.observer/agent/guides/diagnose-stalled-agent
 3. Retest without changing anything: `getMetric` gives `source_type`;
    `exportConfig` with `all: true` gives its `source_config`. Run `testProbe`
    with the same values on the same `agent_id`. A value now means the fix
-   worked; the metric recovers after its dwell time.
+   worked; the metric recovers after its dwell time. For an http check, look
+   at `mode` in the result: if the agent was not ready and the URL is public,
+   the test ran from Observer's cloud (`mode: cloud`), not from the agent.
 
 Older agents report both refused and unresolvable hosts as
 `ConnectionRefused` ("Could not connect"): check host, port and DNS.

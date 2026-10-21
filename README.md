@@ -30,9 +30,16 @@ when it first approves a connection.
 /plugin install observer@useobserver
 ```
 
-On Claude Code 2.1.275 or later this also works in one step:
-`/plugin install observer --marketplace useobserver/skills`. Then run `/mcp`,
+From the shell: `claude plugin marketplace add useobserver/skills`, then
+`claude plugin install observer@useobserver`. On Claude Code 2.1.275 or later
+this also works in one step: `/plugin install observer --marketplace
+useobserver/skills` (from the shell, `claude plugin install observer
+--marketplace useobserver/skills` on 2.1.292 or later). Then run `/mcp`,
 choose `observer` and sign in.
+
+To add only the MCP server: `claude mcp add --transport http observer
+https://mcp.use.observer/mcp` (scope `local` by default; `--scope user` for
+every project).
 
 ### Any Agent Skills client (Cursor, Codex, Copilot, OpenCode and others)
 
@@ -47,8 +54,10 @@ Add the MCP server separately, below. The repository is also an
 
 ### Claude.ai and Claude Desktop
 
-Settings, Connectors, Add custom connector, and paste
-`https://mcp.use.observer/mcp`.
+Customize > Connectors, then + Add > Add custom connector. Enter the name
+`observer` and the URL `https://mcp.use.observer/mcp`, select Continue, review
+the authentication and select Add. On Team and Enterprise an owner adds it
+first under Organization settings > Connectors.
 
 ### Cursor
 
@@ -66,6 +75,9 @@ cursor://anysphere.cursor-deeplink/mcp/install?name=observer&config=eyJ1cmwiOiJo
 code --add-mcp '{"name":"observer","type":"http","url":"https://mcp.use.observer/mcp"}'
 ```
 
+Or in `.vscode/mcp.json` under the `servers` key. OAuth runs in the browser on
+first connect.
+
 ### Codex
 
 ```bash
@@ -80,12 +92,14 @@ gemini extensions install https://github.com/useobserver/skills
 ```
 
 The extension adds the server (`httpUrl`, OAuth discovered from the server)
-and loads `GEMINI.md`, which points at the skills.
+and loads `GEMINI.md`, which points at the skills. For the server alone:
+`gemini mcp add --transport http observer https://mcp.use.observer/mcp`, then
+`/mcp auth observer`. OAuth needs a browser on the same machine.
 
 ### Read-only access
 
 `https://mcp.use.observer/mcp/readonly` offers only the tools that change
-nothing. Use it when the assistant should analyse but never write.
+nothing and need only read scopes. Use it when the assistant should analyse but never write.
 
 ### With an API key instead of OAuth
 
@@ -93,8 +107,8 @@ For clients without OAuth, create an `obs_pub_` key under Developers > API
 keys with only the scopes you need, or let the assistant request one through
 the device flow (paste `Set up Observer for me. Instructions:
 https://use.observer/llms.txt`). Send it as `Authorization: Bearer <key>`.
-Keep keys out of committed files: use user-level config or an environment
-variable reference. Per-client examples:
+Keep keys out of files: put the key in an environment variable and reference
+that from the client config. Per-client examples:
 [skills/observer-connect/references/clients.md](skills/observer-connect/references/clients.md).
 
 ## Skills

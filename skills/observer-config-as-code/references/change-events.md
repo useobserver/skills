@@ -12,15 +12,15 @@ user creates a key with it under Developers > API keys.
 
 | Field | Notes |
 |---|---|
-| `kind` | `deploy` (default), `commit`, `release`, `k8s_event`, `other` |
-| `source` | Where it came from, for example `ci` |
+| `kind` | `deploy` (default), `commit`, `release`, `k8s_event`, `other`. An unknown value is recorded as `deploy` |
+| `source` | Where it came from, for example `ci`; defaults to `generic`, cut to 64 characters |
 | `ref` | Commit SHA, tag or version |
 | `title` | Short description |
-| `url` | Link to the run or release; http or https only |
+| `url` | Link to the run or release; a URL that is not http or https is dropped |
 | `service` | Service name to scope the change to |
-| `service_id` | Service id; wins over `service`. An unknown id or name is ignored |
+| `service_id` | Service id (a UUID, else 422 `invalid_change_event`); wins over `service`. An unknown id or name is ignored |
 | `occurred_at` | ISO 8601 time; defaults to now |
-| `dedupe_key` | Idempotency key: a retry with the same key is recorded once |
+| `dedupe_key` | Idempotency key: a retry with the same key is recorded once and returns `deduped: true` |
 
 ## From an agent
 

@@ -31,9 +31,10 @@ Everything here is read-only. Never change data to improve a number.
    `currency`, `credit_state` (`none`, `owed`, `issued`, `waived`), and the
    signed `payload` for per-line detail. Quote what the payload contains;
    do not invent lines or figures it does not have.
-4. **Check the state.** Only `approved` or `delivered` statements are final.
-   `draft` and `in_review` can still change; `superseded` was replaced by a
-   later revision; `void` was withdrawn. Say which you are reporting.
+4. **Check the state.** `delivered` is the issued version; `approved` is
+   signed off but can still be voided, and a delivered statement can be
+   reopened as a new revision. `draft` and `in_review` can still change;
+   `superseded` was replaced by a later revision; `void` was withdrawn. Say which you are reporting.
 5. **Add context for the period.** `listIncidents` with `since` set to the
    period start, keeping those inside the period; `getIncidentImpact` for
    each that touched the customer's services. Changes near an incident are

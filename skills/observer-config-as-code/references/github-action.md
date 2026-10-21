@@ -24,7 +24,7 @@ observer apply -f observer.yaml               # upsert by key
 observer apply -f observer.yaml --prune       # also delete what the file dropped
 observer export --format yaml -o observer.yaml        # config-managed objects
 observer export --all --format yaml -o observer.yaml  # include console objects
-observer apply -f - < observer.yaml           # read the document from stdin
+observer apply < observer.yaml                # read the document from stdin
 ```
 
 ## GitHub Action

@@ -8,8 +8,9 @@ license: ISC
 
 A status page shows chosen metrics, grouped and ordered, with its own look and
 access mode. Settings change with `updatePage` or a page entry in a config
-document; which metrics show, and how they are grouped, changes only through a
-config document.
+document. Through the API, which metrics show and how they are grouped
+changes only through a config document (the console page editor can also
+change them).
 
 Needs: `read:config`; changes need `write:config`.
 

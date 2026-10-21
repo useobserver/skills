@@ -27,8 +27,10 @@ check `getMe` quotas before creating.
      right now. It recovers as old bad samples roll out of the window.
    - A burn event opens only when the budget goes negative, the SLO is at
      least one hour old and the window holds at least 10 samples. It closes
-     when the budget is back above zero.
-3. Budget burns on `unhealthy` samples. `degraded` counts as good.
+     when the budget is back at zero or above, or the SLO returns to
+     collecting.
+3. Budget burns on `unhealthy` samples, and on samples with no verdict when
+   `unknown_policy` is `down` (the default). `degraded` counts as good.
 
 Report:
 

@@ -40,8 +40,8 @@ Collect, and ask when unknown, rather than guessing:
   proxy or a private CA, or has restricted egress.
 - The status page subdomain they want (`<subdomain>.use.observer`).
 
-Use `observer-checks` to choose each `source_type` and its fields. Heartbeat
-and manual metrics need no agent; everything else does.
+Use `observer-checks` to choose each `source_type` and its fields. Heartbeat,
+manual and alert metrics need no agent; everything else does.
 
 ## 3. Get an Observer Agent
 
@@ -88,8 +88,10 @@ and, once you have them, the four threshold fields.
 - A `reason` instead of a value means the source is wrong or unreachable from
   the agent: fix it now (see `observer-no-data` for the codes).
 - 202: poll `getProbeTest` with `job_id` every 3 to 5 seconds.
-- 409 `agent_unavailable`: the agent is offline, not connected yet, revoked
-  or older than 1.7.0.
+- 409 `agent_unavailable`: `reason` says why (`offline`, `never_connected`,
+  `revoked`, or `outdated` for agents older than 1.7.0). A public http check
+  falls back to Observer's cloud instead (`mode: cloud` in the result), so
+  check `mode`.
 
 Verify: every check returned a value, and with thresholds the expected
 `status`.
@@ -144,7 +146,8 @@ Notes:
 Verify: the apply result matches the dry run. Then `listMetrics` shows each
 new metric with its `agent_id`.
 If it fails: 422 `config_invalid` lists each `path` and `message`; fix and
-dry run again. A plan limit is a 403 with an upgrade link.
+dry run again. Plan limits (quotas, the push interval floor) are 422
+`config_invalid` errors too: tell the user.
 
 ## 6. Share the page and check the first readings
 

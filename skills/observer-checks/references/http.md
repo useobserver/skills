@@ -34,7 +34,7 @@ Sends one request and reports the response time in milliseconds, or, with `json_
 ## Rules
 
 - `url` must be http or https and must not carry `user:pass@`. Put credentials in `header_refs`.
-- `headers` are stored by Observer, so a header whose name looks like a credential (Authorization, Cookie, anything with token, secret, key, auth, session) is rejected there. Map it in `header_refs` to an env var name on the agent host instead.
+- `headers` are stored by Observer, so a header whose name looks like a credential is rejected there: Authorization, Proxy-Authorization, Cookie, Set-Cookie, X-Api-Key, Api-Key, Apikey, any name containing token, secret, password, passwd, auth or session, and any name ending in key. Map it in `header_refs` to an env var name on the agent host instead.
 - A header name may not appear in both `headers` and `header_refs`.
 - Mutual TLS: set `client_cert_ref` and `client_key_ref` together (env vars holding PEM text or a path to a PEM file). `ca_cert_ref` is optional.
 - `expected_status` takes one code or a list. A different status reports `no_data` with an `unexpected_status:<code>` reason.

@@ -55,8 +55,9 @@ For a quick question, answer it here with read tools:
 1. **Scopes are the boundary.** Every tool except `getMe` needs a scope. A 403
    naming a missing scope (`insufficient_scope` or `forbidden`) is fixed by
    granting the scope, not by retrying. A 403 `quota_exceeded`,
-   `feature_locked` or `plan_does_not_permit_api` is a plan limit: tell the
-   user and pass on the upgrade link from the error.
+   `feature_locked` or `plan_does_not_permit_api` is a plan limit, and
+   `item_suspended_plan` an item suspended for being over one: tell the user
+   and pass on the upgrade link when the error has one.
 2. **Read before write.** List or get the object before you change it. Ids are
    UUIDs; never guess one. If an id, organization or target is missing, ask
    and stop.
@@ -87,6 +88,10 @@ Facts that apply everywhere:
 - Threshold operators are strict: `over` is `>`, `under` is `<`, `equal` is
   `=`. A value matching neither the healthy nor the unhealthy rule is
   degraded.
+- Through the MCP server, lists return 20 items unless `limit` says otherwise
+  (up to 200); page with `cursor` set to the previous `next_cursor`. A result
+  over 48,000 characters is shortened and followed by a note that says what
+  was left out and which arguments narrow the request.
 - A metric is healthy, degraded, unhealthy, no_data or unknown. How status is
   calculated: https://docs.use.observer/docs/concepts/how-status-is-calculated
 

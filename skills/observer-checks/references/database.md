@@ -24,9 +24,9 @@ Runs one read-only query against Postgres, MySQL, Redis or MongoDB and reports t
 ## Rules
 
 - `connection_string_ref` is the name of an env var on the agent host holding the full connection URL. The URL never reaches Observer. Use a read-only database user.
-- postgres and mysql: one SELECT (or WITH ... SELECT) statement returning one row with one column. No semicolons, no writes.
+- postgres and mysql: one SELECT (or WITH ... SELECT) statement returning one row with one column. A trailing semicolon is allowed, a second statement is not. No writes.
 - redis: one read-only command from this list: DBSIZE, EXISTS, LLEN, SCARD, ZCARD, HLEN, STRLEN, TTL, PTTL, BITCOUNT, GET.
-- mongodb: a JSON spec using `countDocuments` or `estimatedDocumentCount`, for example `{"db":"shop","collection":"orders","op":"countDocuments","filter":{"status":"pending"}}`. `$where`, `$function`, `$accumulator` and `$expr` are rejected.
+- mongodb: a JSON spec using `countDocuments` or `estimatedDocumentCount`, for example `{"db":"shop","collection":"orders","op":"countDocuments","filter":{"status":"pending"}}`. `estimatedDocumentCount` takes no `filter`. `$where`, `$function`, `$accumulator` and `$expr` are rejected, and so are the `admin`, `config` and `local` databases and `system.*` collections.
 
 ## Example
 

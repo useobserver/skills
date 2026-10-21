@@ -86,7 +86,8 @@ last successful ping. 404 means the metric is not a heartbeat.
 ## Rotate a leaked URL
 
 `rotateMetricHeartbeatUrl` issues a new URL and the old one stops working at
-once, so the check goes late until every job uses the new one. Confirm with
+once (pings to it get 404), so the check goes late if a job still uses the
+old URL when the period plus grace runs out. Confirm with
 the user and make sure they can update the jobs right away. Then
 `getMetricHeartbeat` for the new `ping_url`.
 
