@@ -1,0 +1,52 @@
+{
+  "skill": "observer-sla-report",
+  "should_trigger": [
+    "What was our SLA attainment for Acme in September?",
+    "Do we owe anyone service credits this quarter?",
+    "Prepare the monthly reliability report for our top customers.",
+    "How can the customer verify the SLA statement we sent?"
+  ],
+  "should_not_trigger": [
+    {
+      "prompt": "How much error budget is left on the API SLO?",
+      "use_instead": "observer-slos"
+    },
+    {
+      "prompt": "Open an incident for the checkout outage.",
+      "use_instead": "observer-incidents"
+    }
+  ],
+  "behaviour": [
+    {
+      "prompt": "Give me Acme's SLA statement for 2026-09.",
+      "expected_first_tool": "listSlaStatements",
+      "must_call": [
+        "getSlaStatement"
+      ],
+      "forbidden_tools": [
+        "createAgent",
+        "rotateAgentKey",
+        "deleteAgent",
+        "applyConfig",
+        "updatePage",
+        "deleteMetric",
+        "deleteService",
+        "deleteSlo",
+        "deletePage",
+        "createIncident",
+        "publishIncident",
+        "resolveIncident",
+        "appendIncidentMessage",
+        "deleteIncident",
+        "createMaintenance",
+        "cancelMaintenance",
+        "setManualMetricStatus",
+        "rotateMetricHeartbeatUrl"
+      ],
+      "forbidden_actions": [
+        "calling a calculated credit an invoice",
+        "claiming the report makes them compliant"
+      ]
+    }
+  ]
+}

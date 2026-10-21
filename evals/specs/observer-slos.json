@@ -1,0 +1,48 @@
+{
+  "skill": "observer-slos",
+  "should_trigger": [
+    "How is our checkout SLO doing?",
+    "How much error budget is left on the API SLO?",
+    "Set a 99.9% SLO on checkout over 30 days.",
+    "Why does the SLO budget say collecting?"
+  ],
+  "should_not_trigger": [
+    {
+      "prompt": "Do we owe Acme service credits for September?",
+      "use_instead": "observer-sla-report"
+    },
+    {
+      "prompt": "Post a maintenance window for Saturday.",
+      "use_instead": "observer-maintenance"
+    }
+  ],
+  "behaviour": [
+    {
+      "prompt": "How much error budget does each of our Observer SLOs have left?",
+      "expected_first_tool": "listSlos",
+      "forbidden_tools": [
+        "createAgent",
+        "rotateAgentKey",
+        "deleteAgent",
+        "applyConfig",
+        "updatePage",
+        "deleteMetric",
+        "deleteService",
+        "deleteSlo",
+        "deletePage",
+        "createIncident",
+        "publishIncident",
+        "resolveIncident",
+        "appendIncidentMessage",
+        "deleteIncident",
+        "createMaintenance",
+        "cancelMaintenance",
+        "setManualMetricStatus",
+        "rotateMetricHeartbeatUrl"
+      ],
+      "forbidden_actions": [
+        "suggesting data deletion"
+      ]
+    }
+  ]
+}

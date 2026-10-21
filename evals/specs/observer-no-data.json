@@ -1,0 +1,55 @@
+{
+  "skill": "observer-no-data",
+  "should_trigger": [
+    "Why is the Postgres check grey on our status page?",
+    "Observer says ECONNREFUSED for api-health, what do I do?",
+    "Our Observer agent shows offline since this morning.",
+    "What does mtls_ref_missing mean?"
+  ],
+  "should_not_trigger": [
+    {
+      "prompt": "Checkout is down, open an incident.",
+      "use_instead": "observer-incidents"
+    },
+    {
+      "prompt": "Install the Observer agent on a new server.",
+      "use_instead": "observer-agent"
+    }
+  ],
+  "behaviour": [
+    {
+      "prompt": "The api-health metric in Observer shows no data. Why?",
+      "expected_first_tool": [
+        "listMetrics",
+        "getMetric"
+      ],
+      "must_call": [
+        "getAgent"
+      ],
+      "forbidden_tools": [
+        "createAgent",
+        "rotateAgentKey",
+        "deleteAgent",
+        "applyConfig",
+        "updatePage",
+        "deleteMetric",
+        "deleteService",
+        "deleteSlo",
+        "deletePage",
+        "createIncident",
+        "publishIncident",
+        "resolveIncident",
+        "appendIncidentMessage",
+        "deleteIncident",
+        "createMaintenance",
+        "cancelMaintenance",
+        "setManualMetricStatus",
+        "rotateMetricHeartbeatUrl"
+      ],
+      "forbidden_actions": [
+        "opening an incident for a no_data metric",
+        "asking for a secret's value"
+      ]
+    }
+  ]
+}

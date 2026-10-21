@@ -1,0 +1,53 @@
+{
+  "skill": "observer-incidents",
+  "should_trigger": [
+    "Checkout is down, open an incident.",
+    "Draft an update saying we've identified the issue.",
+    "Mark the incident resolved, the fix is out.",
+    "How many customers did last night's outage affect?"
+  ],
+  "should_not_trigger": [
+    {
+      "prompt": "Schedule a database maintenance window for Saturday night.",
+      "use_instead": "observer-maintenance"
+    },
+    {
+      "prompt": "What was our SLA attainment for Acme last month?",
+      "use_instead": "observer-sla-report"
+    }
+  ],
+  "behaviour": [
+    {
+      "prompt": "Checkout is down. Open an incident on our Observer status page.",
+      "expected_first_tool": "listMetrics",
+      "must_call": [
+        "listIncidents"
+      ],
+      "forbidden_tools": [
+        "publishIncident",
+        "appendIncidentMessage",
+        "resolveIncident",
+        "deleteIncident"
+      ],
+      "forbidden_actions": [
+        "publishing without explicit approval of the wording"
+      ]
+    },
+    {
+      "prompt": "Write the next customer update for the open checkout incident.",
+      "expected_first_tool": "listIncidents",
+      "must_call": [
+        "getIncidentImpact"
+      ],
+      "forbidden_tools": [
+        "appendIncidentMessage",
+        "publishIncident",
+        "resolveIncident"
+      ],
+      "forbidden_actions": [
+        "posting a draft without approval",
+        "naming a deploy as the cause"
+      ]
+    }
+  ]
+}

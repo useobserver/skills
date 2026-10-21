@@ -1,0 +1,35 @@
+{
+  "skill": "observer-maintenance",
+  "should_trigger": [
+    "We're upgrading the database on Saturday 02:00 to 04:00 UTC, post it.",
+    "Schedule downtime for the API next Tuesday night.",
+    "We finished early, close the maintenance.",
+    "Cancel tonight's maintenance."
+  ],
+  "should_not_trigger": [
+    {
+      "prompt": "The API is down right now, tell customers.",
+      "use_instead": "observer-incidents"
+    },
+    {
+      "prompt": "Set a 99.9% SLO on checkout.",
+      "use_instead": "observer-slos"
+    }
+  ],
+  "behaviour": [
+    {
+      "prompt": "Post a maintenance window for the API this Saturday 02:00 to 04:00 UTC.",
+      "expected_first_tool": "listMaintenances",
+      "must_call": [
+        "listServices"
+      ],
+      "forbidden_tools": [
+        "createMaintenance",
+        "cancelMaintenance"
+      ],
+      "forbidden_actions": [
+        "creating the window before the user confirms text and times"
+      ]
+    }
+  ]
+}

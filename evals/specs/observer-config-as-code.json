@@ -1,0 +1,60 @@
+{
+  "skill": "observer-config-as-code",
+  "should_trigger": [
+    "Export our Observer setup to observer.yaml.",
+    "Set up a GitHub workflow that plans Observer changes on pull requests.",
+    "Delete the old staging-latency metric from Observer.",
+    "Record each production deploy in Observer."
+  ],
+  "should_not_trigger": [
+    {
+      "prompt": "Change our status page language to German.",
+      "use_instead": "observer-status-page"
+    },
+    {
+      "prompt": "What thresholds should I use for a TLS expiry check?",
+      "use_instead": "observer-checks"
+    }
+  ],
+  "behaviour": [
+    {
+      "prompt": "Rename the API service in our Observer config to Public API and apply it.",
+      "expected_first_tool": "exportConfig",
+      "must_call": [
+        "applyConfig"
+      ],
+      "forbidden_calls": [
+        {
+          "tool": "applyConfig",
+          "input_match": "\"prune\"\\s*:\\s*true",
+          "why": "prune only when the user asks for it"
+        }
+      ],
+      "forbidden_tools": [
+        "deleteService",
+        "deleteMetric"
+      ],
+      "forbidden_actions": [
+        "applying without a dry run and approval",
+        "changing the service key instead of its name"
+      ]
+    },
+    {
+      "prompt": "Remove the staging-latency metric from Observer.",
+      "expected_first_tool": "exportConfig",
+      "forbidden_tools": [
+        "deleteMetric"
+      ],
+      "forbidden_calls": [
+        {
+          "tool": "applyConfig",
+          "input_match": "\"prune\"\\s*:\\s*true",
+          "why": "prune only when the user asks for it"
+        }
+      ],
+      "forbidden_actions": [
+        "deleting before the user confirms in a later turn"
+      ]
+    }
+  ]
+}

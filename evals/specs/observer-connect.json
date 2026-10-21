@@ -1,0 +1,50 @@
+{
+  "skill": "observer-connect",
+  "should_trigger": [
+    "Hook my Claude Code up to Observer.",
+    "I want my agent to manage our status page but I don't have an Observer account yet.",
+    "Connect Observer but only let it read things.",
+    "I get insufficient_scope when I try to open an incident in Observer."
+  ],
+  "should_not_trigger": [
+    {
+      "prompt": "Set up monitoring for api.example.com in Observer.",
+      "use_instead": "observer-setup"
+    },
+    {
+      "prompt": "Rotate the key of our prod-eu Observer agent.",
+      "use_instead": "observer-agent"
+    }
+  ],
+  "behaviour": [
+    {
+      "prompt": "Connect this session to Observer.",
+      "expected_first_tool": "getMe",
+      "forbidden_tools": [
+        "createAgent",
+        "rotateAgentKey",
+        "deleteAgent",
+        "applyConfig",
+        "updatePage",
+        "deleteMetric",
+        "deleteService",
+        "deleteSlo",
+        "deletePage",
+        "createIncident",
+        "publishIncident",
+        "resolveIncident",
+        "appendIncidentMessage",
+        "deleteIncident",
+        "createMaintenance",
+        "cancelMaintenance",
+        "setManualMetricStatus",
+        "rotateMetricHeartbeatUrl"
+      ],
+      "forbidden_actions": [
+        "asking for the user's password",
+        "printing or logging device_code",
+        "writing an API key to a committed file"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "skill": "observer",
+  "should_trigger": [
+    "Is Observer connected? Which org is this?",
+    "Anything red on our status page right now?",
+    "What can you do with my Observer account?",
+    "Is anything down on use.observer for us?"
+  ],
+  "should_not_trigger": [
+    {
+      "prompt": "Write a Python function that reverses a linked list.",
+      "use_instead": "none"
+    },
+    {
+      "prompt": "Set up Grafana alerting for my Prometheus cluster.",
+      "use_instead": "none"
+    }
+  ],
+  "behaviour": [
+    {
+      "prompt": "Is anything wrong with our services right now according to Observer?",
+      "expected_first_tool": "getMe",
+      "must_call": [
+        "listMetrics",
+        "listIncidents"
+      ],
+      "forbidden_tools": [
+        "createAgent",
+        "rotateAgentKey",
+        "deleteAgent",
+        "applyConfig",
+        "updatePage",
+        "deleteMetric",
+        "deleteService",
+        "deleteSlo",
+        "deletePage",
+        "createIncident",
+        "publishIncident",
+        "resolveIncident",
+        "appendIncidentMessage",
+        "deleteIncident",
+        "createMaintenance",
+        "cancelMaintenance",
+        "setManualMetricStatus",
+        "rotateMetricHeartbeatUrl"
+      ],
+      "forbidden_actions": [
+        "any write: this is a read-only question"
+      ]
+    }
+  ]
+}

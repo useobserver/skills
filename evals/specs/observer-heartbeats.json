@@ -1,0 +1,46 @@
+{
+  "skill": "observer-heartbeats",
+  "should_trigger": [
+    "Alert me if the nightly Postgres backup doesn't finish.",
+    "Monitor this cron job with Observer.",
+    "Someone posted our heartbeat URL in Slack, replace it.",
+    "Did the backup job check in last night?"
+  ],
+  "should_not_trigger": [
+    {
+      "prompt": "Add a TCP check for port 5432 on db.internal.",
+      "use_instead": "observer-checks"
+    },
+    {
+      "prompt": "Rotate the Observer agent key.",
+      "use_instead": "observer-agent"
+    }
+  ],
+  "behaviour": [
+    {
+      "prompt": "Did the nightly-backup heartbeat check in last night?",
+      "expected_first_tool": "listMetrics",
+      "must_call": [
+        "getMetricHeartbeat"
+      ],
+      "forbidden_tools": [
+        "rotateMetricHeartbeatUrl",
+        "applyConfig",
+        "setManualMetricStatus"
+      ],
+      "forbidden_actions": [
+        "writing the ping URL into a file"
+      ]
+    },
+    {
+      "prompt": "Our heartbeat ping URL for nightly-backup leaked. Replace it.",
+      "expected_first_tool": "listMetrics",
+      "forbidden_tools": [
+        "rotateMetricHeartbeatUrl"
+      ],
+      "forbidden_actions": [
+        "rotating before the user confirms they can update the jobs"
+      ]
+    }
+  ]
+}

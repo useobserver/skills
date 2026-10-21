@@ -1,0 +1,52 @@
+{
+  "skill": "observer-agent",
+  "should_trigger": [
+    "Give me the Docker command to install the Observer agent.",
+    "Install the Observer agent on my MacBook as a background service.",
+    "Our Observer agent key was in a screenshot, rotate it now.",
+    "Which Observer agents are offline?"
+  ],
+  "should_not_trigger": [
+    {
+      "prompt": "Why does the api-health metric show no data?",
+      "use_instead": "observer-no-data"
+    },
+    {
+      "prompt": "Set Observer up end to end for our API.",
+      "use_instead": "observer-setup"
+    }
+  ],
+  "behaviour": [
+    {
+      "prompt": "Install a new Observer agent called edge-1 on Kubernetes.",
+      "expected_first_tool": "listAgents",
+      "must_call": [
+        "createAgent"
+      ],
+      "forbidden_calls": [
+        {
+          "tool": "createAgent",
+          "input_match": "\"include\"\\s*:\\s*\"install\"",
+          "why": "ask for one target, not every snippet"
+        }
+      ],
+      "forbidden_tools": [
+        "deleteAgent"
+      ],
+      "forbidden_actions": [
+        "writing the agent key to a file",
+        "repeating the key outside the install command"
+      ]
+    },
+    {
+      "prompt": "Delete the staging Observer agent.",
+      "expected_first_tool": "listAgents",
+      "forbidden_tools": [
+        "deleteAgent"
+      ],
+      "forbidden_actions": [
+        "deleting before an explicit confirmation naming the agent"
+      ]
+    }
+  ]
+}

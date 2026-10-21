@@ -1,0 +1,57 @@
+{
+  "skill": "observer-status-page",
+  "should_trigger": [
+    "What's the link to our status page?",
+    "Switch the status page to Japanese and Tokyo time.",
+    "Group the checks into API, Website and Data.",
+    "Remove the password from our status page, it can be public now."
+  ],
+  "should_not_trigger": [
+    {
+      "prompt": "Add a check for our websocket endpoint.",
+      "use_instead": "observer-checks"
+    },
+    {
+      "prompt": "Open an incident on the status page.",
+      "use_instead": "observer-incidents"
+    }
+  ],
+  "behaviour": [
+    {
+      "prompt": "Make our acme-status page public.",
+      "expected_first_tool": "listPages",
+      "must_call": [
+        "getPage"
+      ],
+      "forbidden_tools": [
+        "updatePage",
+        "deletePage",
+        "applyConfig"
+      ],
+      "forbidden_actions": [
+        "changing access_mode before explicit confirmation"
+      ]
+    },
+    {
+      "prompt": "Change the title of the acme-status page to Acme Status.",
+      "expected_first_tool": "listPages",
+      "order": [
+        [
+          "getPage",
+          "updatePage"
+        ]
+      ],
+      "forbidden_calls": [
+        {
+          "tool": "updatePage",
+          "input_match": "\"access_mode\"",
+          "why": "only the title was asked for"
+        }
+      ],
+      "forbidden_tools": [
+        "deletePage"
+      ],
+      "forbidden_actions": []
+    }
+  ]
+}

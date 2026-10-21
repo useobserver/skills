@@ -1,0 +1,45 @@
+{
+  "skill": "observer-checks",
+  "should_trigger": [
+    "Add a check that our checkout API answers in under 300 ms.",
+    "Alert when the certificate on api.example.com has less than 14 days left.",
+    "Watch the number of failed jobs in our Postgres database.",
+    "This Observer check flaps every night, calm it down."
+  ],
+  "should_not_trigger": [
+    {
+      "prompt": "Why is our Postgres check grey in Observer?",
+      "use_instead": "observer-no-data"
+    },
+    {
+      "prompt": "Alert me if the nightly backup cron doesn't run.",
+      "use_instead": "observer-heartbeats"
+    }
+  ],
+  "behaviour": [
+    {
+      "prompt": "Add an HTTP check for https://api.example.com/health on our prod-eu agent.",
+      "expected_first_tool": "listAgents",
+      "order": [
+        [
+          "testProbe",
+          "applyConfig"
+        ]
+      ],
+      "forbidden_calls": [
+        {
+          "tool": "applyConfig",
+          "input_match": "\"prune\"\\s*:\\s*true",
+          "why": "prune only when the user asks for it"
+        }
+      ],
+      "forbidden_tools": [
+        "deleteMetric"
+      ],
+      "forbidden_actions": [
+        "thresholds in seconds for an http check (unit is ms)",
+        "inline secret in headers instead of header_refs"
+      ]
+    }
+  ]
+}
