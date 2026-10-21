@@ -1,7 +1,7 @@
 {
   "name": "observer",
   "displayName": "Observer",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Status pages, checks, Observer Agents, SLOs, SLA reports, incidents and maintenance for Observer, with the Observer MCP server (OAuth) and skills that teach safe, read-before-write workflows.",
   "author": {
     "name": "Observer",
@@ -20,7 +20,6 @@
     "incidents",
     "mcp"
   ],
-  "icon": "./assets/logo-square.png",
   "documentationUrl": "https://docs.use.observer",
   "supportUrl": "https://github.com/useobserver/skills/issues",
   "privacyPolicyUrl": "https://use.observer/policies/privacy",

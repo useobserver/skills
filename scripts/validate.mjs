@@ -183,7 +183,6 @@ if (new Set(Object.values(urls)).size !== 1 || !String(urls[".mcp.json"]).starts
 if (claudeMcp?.mcpServers?.observer?.type !== "http") err(join(ROOT, ".mcp.json"), 'observer server needs "type": "http"');
 if (apMcp?.mcpServers?.observer?.type !== "streamable-http") err(join(ROOT, "mcp.json"), 'observer server needs "type": "streamable-http"');
 if (gemini?.contextFileName && !existsSync(join(ROOT, gemini.contextFileName))) err(join(ROOT, "gemini-extension.json"), `contextFileName ${gemini.contextFileName} does not exist`);
-if (claudePlugin?.icon && !existsSync(join(ROOT, claudePlugin.icon))) err(join(ROOT, ".claude-plugin/plugin.json"), `icon ${claudePlugin.icon} does not exist`);
 
 const entry = marketplace?.plugins?.find((p) => p.name === claudePlugin?.name);
 if (!entry) err(join(ROOT, ".claude-plugin/marketplace.json"), "no plugin entry named like .claude-plugin/plugin.json");

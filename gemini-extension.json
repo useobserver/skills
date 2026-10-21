@@ -1,6 +1,6 @@
 {
   "name": "observer",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Status pages, checks, Observer Agents, SLOs, SLA reports, incidents and maintenance for Observer, with the Observer MCP server (OAuth) and skills that teach safe, read-before-write workflows.",
   "contextFileName": "GEMINI.md",
   "mcpServers": {

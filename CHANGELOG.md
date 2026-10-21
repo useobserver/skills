@@ -4,6 +4,11 @@ All notable changes to the Observer skills and plugin. Versions follow
 semantic versioning. The version here matches `.claude-plugin/plugin.json`,
 `plugin.json` and `gemini-extension.json`.
 
+## 2.0.1
+
+- The CLI install steps download a pinned release and check its SHA256SUMS instead of piping a script to the shell.
+- The Claude plugin manifest no longer names an icon file; the directory listing sets the icon.
+
 ## [2.0.0] - 2026-10-21
 
 The repository is now a plugin for Claude Code, an Agent Plugins 1.0 package

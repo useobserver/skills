@@ -2,13 +2,20 @@
 
 ## Install the CLI
 
+Download the binary for your platform from
+https://github.com/useobserver/cli/releases and check it against the
+release's `SHA256SUMS.txt` before running it. For example, on Linux x64:
+
 ```bash
-curl -fsSL https://raw.githubusercontent.com/useobserver/cli/main/install.sh | sh
+V=cli-v1.1.2
+curl -fsSLO https://github.com/useobserver/cli/releases/download/$V/observer-linux-x64
+curl -fsSLO https://github.com/useobserver/cli/releases/download/$V/SHA256SUMS.txt
+grep ' observer-linux-x64$' SHA256SUMS.txt | sha256sum -c -
+chmod +x observer-linux-x64 && mv observer-linux-x64 /usr/local/bin/observer
 ```
 
-Or download a binary from https://github.com/useobserver/cli/releases (each
-release has `SHA256SUMS.txt`). With Node 20.10 or later the CLI also runs from
-source: `node bin.mjs`.
+In CI, prefer the GitHub Action below. With Node 20.10 or later the CLI also
+runs from source: `node bin.mjs`.
 
 Configuration is by environment:
 
