@@ -1,0 +1,474 @@
+{
+  "source": "apps/observer-mcp/generated/tools.ts",
+  "count": 52,
+  "tools": [
+    {
+      "name": "addIncidentNote",
+      "method": "POST",
+      "path": "/incidents/{id}/notes",
+      "scopes": [
+        "write:incidents"
+      ],
+      "summary": "Attach an internal note (e.g. findings from another tool) to an incident; never published"
+    },
+    {
+      "name": "appendIncidentMessage",
+      "method": "POST",
+      "path": "/incidents/{id}/messages",
+      "scopes": [
+        "write:incidents"
+      ],
+      "summary": "Append a timeline message; type=Resolved auto-resolves the parent"
+    },
+    {
+      "name": "applyConfig",
+      "method": "POST",
+      "path": "/config/apply",
+      "scopes": [
+        "write:config"
+      ],
+      "summary": "Apply a config-as-code document (idempotent upsert by config_key)"
+    },
+    {
+      "name": "cancelMaintenance",
+      "method": "POST",
+      "path": "/maintenances/{id}/cancel",
+      "scopes": [
+        "write:maintenances"
+      ],
+      "summary": "Cancel a maintenance before completion"
+    },
+    {
+      "name": "completeMaintenance",
+      "method": "POST",
+      "path": "/maintenances/{id}/complete",
+      "scopes": [
+        "write:maintenances"
+      ],
+      "summary": "Manually transition an in-progress maintenance to completed"
+    },
+    {
+      "name": "createAgent",
+      "method": "POST",
+      "path": "/agents",
+      "scopes": [
+        "write:agents"
+      ],
+      "summary": "Create an Observer Agent and get its key (shown once)"
+    },
+    {
+      "name": "createChangeEvent",
+      "method": "POST",
+      "path": "/change-events",
+      "scopes": [
+        "write:change_events"
+      ],
+      "summary": "Ingest a deploy / commit / release event for status-transition correlation"
+    },
+    {
+      "name": "createIncident",
+      "method": "POST",
+      "path": "/incidents",
+      "scopes": [
+        "write:incidents"
+      ],
+      "summary": "Create incident (draft or published)"
+    },
+    {
+      "name": "createMaintenance",
+      "method": "POST",
+      "path": "/maintenances",
+      "scopes": [
+        "write:maintenances"
+      ],
+      "summary": "Schedule a maintenance window"
+    },
+    {
+      "name": "deleteAgent",
+      "method": "DELETE",
+      "path": "/agents/{id}",
+      "scopes": [
+        "write:agents"
+      ],
+      "summary": "Delete an Observer Agent (its key stops working; its metrics are kept, unassigned)"
+    },
+    {
+      "name": "deleteIncident",
+      "method": "DELETE",
+      "path": "/incidents/{id}",
+      "scopes": [
+        "write:incidents"
+      ],
+      "summary": "Soft-delete incident"
+    },
+    {
+      "name": "deleteMetric",
+      "method": "DELETE",
+      "path": "/metrics/{id}",
+      "scopes": [
+        "write:config"
+      ],
+      "summary": "Delete a config-managed metric by id or config_key"
+    },
+    {
+      "name": "deletePage",
+      "method": "DELETE",
+      "path": "/pages/{id}",
+      "scopes": [
+        "write:config"
+      ],
+      "summary": "Delete a config-managed page by id or config_key"
+    },
+    {
+      "name": "deleteService",
+      "method": "DELETE",
+      "path": "/services/{id}",
+      "scopes": [
+        "write:config"
+      ],
+      "summary": "Delete a config-managed service by id or config_key"
+    },
+    {
+      "name": "deleteSlo",
+      "method": "DELETE",
+      "path": "/slos/{id}",
+      "scopes": [
+        "write:config"
+      ],
+      "summary": "Delete a config-managed SLO by id or config_key"
+    },
+    {
+      "name": "draftIncidentFromMetric",
+      "method": "POST",
+      "path": "/incidents/from-metric/{metricId}",
+      "scopes": [
+        "write:incidents"
+      ],
+      "summary": "Pre-fill a draft incident from the metric's current state (idempotent within 30 minutes)"
+    },
+    {
+      "name": "draftIncidentUpdate",
+      "method": "POST",
+      "path": "/incidents/{id}/draft",
+      "scopes": [
+        "write:incidents"
+      ],
+      "summary": "Draft the next customer update with AI, plus the evidence appendix it was written against (never publishes)"
+    },
+    {
+      "name": "exportConfig",
+      "method": "GET",
+      "path": "/config/export",
+      "scopes": [
+        "read:config"
+      ],
+      "summary": "Export the org's config as a canonical apply document"
+    },
+    {
+      "name": "exportIncidentEvidence",
+      "method": "GET",
+      "path": "/incidents/{id}/evidence",
+      "scopes": [
+        "read:incidents"
+      ],
+      "summary": "Signed incident evidence export (canonical JSON envelope, or PDF), verifiable on the public verify page"
+    },
+    {
+      "name": "getAgent",
+      "method": "GET",
+      "path": "/agents/{id}",
+      "scopes": [
+        "read:agents"
+      ],
+      "summary": "Get an Observer Agent: status, whether it ever connected, heartbeats, metric count"
+    },
+    {
+      "name": "getIncident",
+      "method": "GET",
+      "path": "/incidents/{id}",
+      "scopes": [
+        "read:incidents"
+      ],
+      "summary": "Get incident"
+    },
+    {
+      "name": "getIncidentImpact",
+      "method": "GET",
+      "path": "/incidents/{id}/impact",
+      "scopes": [
+        "read:incidents"
+      ],
+      "summary": "Measured impact of an incident: window, affected services, checks and customers, SLO burn, related changes, observers"
+    },
+    {
+      "name": "getMaintenance",
+      "method": "GET",
+      "path": "/maintenances/{id}",
+      "scopes": [
+        "read:maintenances"
+      ],
+      "summary": "Get maintenance"
+    },
+    {
+      "name": "getMe",
+      "method": "GET",
+      "path": "/me",
+      "scopes": [],
+      "summary": "Who this API key is: organization, scopes, plan, quotas with usage, rate limits"
+    },
+    {
+      "name": "getMetric",
+      "method": "GET",
+      "path": "/metrics/{id}",
+      "scopes": [
+        "read:metrics"
+      ],
+      "summary": "Get metric by id"
+    },
+    {
+      "name": "getMetricHeartbeat",
+      "method": "GET",
+      "path": "/metrics/{id}/heartbeat",
+      "scopes": [
+        "read:metrics"
+      ],
+      "summary": "Heartbeat schedule, state and recent pings (source_type heartbeat)"
+    },
+    {
+      "name": "getMetricHistory",
+      "method": "GET",
+      "path": "/metrics/{id}/history",
+      "scopes": [
+        "read:metrics"
+      ],
+      "summary": "Aggregated metric values over a window (max 30 days)"
+    },
+    {
+      "name": "getPage",
+      "method": "GET",
+      "path": "/pages/{id}",
+      "scopes": [
+        "read:config"
+      ],
+      "summary": "Get a status page, with its metrics in display order"
+    },
+    {
+      "name": "getProbeTest",
+      "method": "GET",
+      "path": "/metrics/test/{job_id}",
+      "scopes": [
+        "write:metrics",
+        "write:config"
+      ],
+      "summary": "Get the result of a probe test that was still running (testProbe returned 202)"
+    },
+    {
+      "name": "getService",
+      "method": "GET",
+      "path": "/services/{id}",
+      "scopes": [
+        "read:services"
+      ],
+      "summary": "Get service by id"
+    },
+    {
+      "name": "getSlaStatement",
+      "method": "GET",
+      "path": "/sla/statements/{id}",
+      "scopes": [
+        "read:sla"
+      ],
+      "summary": "Get an SLA Ledger statement with its signed payload"
+    },
+    {
+      "name": "getSlo",
+      "method": "GET",
+      "path": "/slos/{id}",
+      "scopes": [
+        "read:slos"
+      ],
+      "summary": "Get SLO with latest burn event"
+    },
+    {
+      "name": "listAgents",
+      "method": "GET",
+      "path": "/agents",
+      "scopes": [
+        "read:agents"
+      ],
+      "summary": "List Observer Agents and whether each is online"
+    },
+    {
+      "name": "listAuditLog",
+      "method": "GET",
+      "path": "/audit-log",
+      "scopes": [
+        "read:audit"
+      ],
+      "summary": "List the organization's audit log, newest first (Business and Enterprise)"
+    },
+    {
+      "name": "listIncidentNotes",
+      "method": "GET",
+      "path": "/incidents/{id}/notes",
+      "scopes": [
+        "read:incidents"
+      ],
+      "summary": "List an incident's internal notes, oldest first"
+    },
+    {
+      "name": "listIncidents",
+      "method": "GET",
+      "path": "/incidents",
+      "scopes": [
+        "read:incidents"
+      ],
+      "summary": "List incidents"
+    },
+    {
+      "name": "listMaintenances",
+      "method": "GET",
+      "path": "/maintenances",
+      "scopes": [
+        "read:maintenances"
+      ],
+      "summary": "List maintenances"
+    },
+    {
+      "name": "listMetrics",
+      "method": "GET",
+      "path": "/metrics",
+      "scopes": [
+        "read:metrics"
+      ],
+      "summary": "List metrics"
+    },
+    {
+      "name": "listPages",
+      "method": "GET",
+      "path": "/pages",
+      "scopes": [
+        "read:config"
+      ],
+      "summary": "List status pages with their public URL"
+    },
+    {
+      "name": "listServices",
+      "method": "GET",
+      "path": "/services",
+      "scopes": [
+        "read:services"
+      ],
+      "summary": "List services"
+    },
+    {
+      "name": "listSlaStatements",
+      "method": "GET",
+      "path": "/sla/statements",
+      "scopes": [
+        "read:sla"
+      ],
+      "summary": "List SLA Ledger statements"
+    },
+    {
+      "name": "listSlos",
+      "method": "GET",
+      "path": "/slos",
+      "scopes": [
+        "read:slos"
+      ],
+      "summary": "List SLOs"
+    },
+    {
+      "name": "patchIncident",
+      "method": "PATCH",
+      "path": "/incidents/{id}",
+      "scopes": [
+        "write:incidents"
+      ],
+      "summary": "Patch incident (title, severity, affected services, visibility, customer targeting)"
+    },
+    {
+      "name": "patchMaintenance",
+      "method": "PATCH",
+      "path": "/maintenances/{id}",
+      "scopes": [
+        "write:maintenances"
+      ],
+      "summary": "Edit maintenance (only allowed before actual_start_at is set)"
+    },
+    {
+      "name": "publishIncident",
+      "method": "POST",
+      "path": "/incidents/{id}/publish",
+      "scopes": [
+        "write:incidents"
+      ],
+      "summary": "Publish a draft incident"
+    },
+    {
+      "name": "resolveIncident",
+      "method": "POST",
+      "path": "/incidents/{id}/resolve",
+      "scopes": [
+        "write:incidents"
+      ],
+      "summary": "Resolve an incident with optional final message"
+    },
+    {
+      "name": "rotateAgentKey",
+      "method": "POST",
+      "path": "/agents/{id}/rotate-key",
+      "scopes": [
+        "write:agents"
+      ],
+      "summary": "Issue a new agent key (shown once)"
+    },
+    {
+      "name": "rotateMetricHeartbeatUrl",
+      "method": "POST",
+      "path": "/metrics/{id}/heartbeat/rotate",
+      "scopes": [
+        "write:metrics"
+      ],
+      "summary": "Issue a new heartbeat ping URL (the old one stops working)"
+    },
+    {
+      "name": "setManualMetricStatus",
+      "method": "POST",
+      "path": "/metrics/{id}/status",
+      "scopes": [
+        "write:metrics"
+      ],
+      "summary": "Set status on a manually-managed metric"
+    },
+    {
+      "name": "startMaintenance",
+      "method": "POST",
+      "path": "/maintenances/{id}/start",
+      "scopes": [
+        "write:maintenances"
+      ],
+      "summary": "Manually transition a scheduled maintenance to in_progress"
+    },
+    {
+      "name": "testProbe",
+      "method": "POST",
+      "path": "/metrics/test",
+      "scopes": [
+        "write:metrics",
+        "write:config"
+      ],
+      "summary": "Run a draft probe once and return the value it measures, without creating a metric"
+    },
+    {
+      "name": "updatePage",
+      "method": "PATCH",
+      "path": "/pages/{id}",
+      "scopes": [
+        "write:config"
+      ],
+      "summary": "Change a status page's settings"
+    }
+  ]
+}
