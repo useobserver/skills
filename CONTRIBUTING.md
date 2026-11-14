@@ -17,15 +17,31 @@
 5. Plain prose: no marketing words, no em or en dashes.
 6. Add `evals/specs/<name>.json` and list the skill in
    `.claude-plugin/marketplace.json` and the README skills table.
-7. Run `node scripts/validate.mjs` and `claude plugin validate .`.
+7. Run `node .tools/validate.mjs` and `claude plugin validate .`.
+
+## Development scripts
+
+`main` holds only Markdown, JSON, YAML and images: the plugin directory refuses
+scripts and other file types from this repository. The validator, the
+generators and the eval builder are on the `tools` branch. Check it out next to
+the plugin once (`.tools/` is git-ignored), and run the scripts from the
+repository root:
+
+```bash
+git worktree add .tools tools
+node .tools/validate.mjs
+```
+
+Do not add a script, an SVG or any other file type to `main`. The validator
+fails on one.
 
 ## Generated files
 
 From a checkout of the Observer monorepo (Bun required):
 
 ```bash
-bun scripts/sync-tools.ts /path/to/observer          # scripts/tools.json
-bun scripts/gen-probe-refs.ts /path/to/observer      # observer-checks/references
+bun .tools/sync-tools.ts /path/to/observer          # evals/tools.json
+bun .tools/gen-probe-refs.ts /path/to/observer      # observer-checks/references
 ```
 
 Commit the output. Do not edit generated files by hand.
@@ -39,7 +55,7 @@ approval, or `applyConfig` with `prune`). They are not run in CI. To run them
 with Claude Code's plugin evals against a mocked Observer server:
 
 ```bash
-node scripts/build-evals.mjs                    # writes evals/suite/ (git-ignored)
+node .tools/build-evals.mjs                     # writes evals/suite/ (git-ignored)
 claude plugin eval . --eval-dir evals/suite --runs 1 --ablation none   # quick pass
 claude plugin eval . --eval-dir evals/suite                            # full, with baseline
 claude plugin eval . --eval-dir evals/suite --tag observer-incidents   # one skill

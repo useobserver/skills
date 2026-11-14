@@ -4,12 +4,17 @@ All notable changes to the Observer skills and plugin. Versions follow
 semantic versioning. The version here matches `.claude-plugin/plugin.json`,
 `plugin.json` and `gemini-extension.json`.
 
+## [2.1.1] - 2026-11-14
+
+- The development scripts (validator, generators, eval builder) moved to the `tools` branch, and the unused SVG headline is gone. This branch now holds only Markdown, JSON, YAML and images, which is what the plugin directory accepts. No skill changed.
+- `scripts/tools.json` is now `evals/tools.json`.
+
 ## [2.1.0] - 2026-11-14
 
 - `observer-setup` starts a public website or API with a hosted check (`createHostedCheck`): Observer checks the URL from its own locations and puts it on a public status page, with no agent. Hosted checks are experimental and the skill says so. An agent is still installed for anything private, and when the user asks for one.
 - `observer-connect` names that first step after connecting.
 - `observer-checks` explains hosted checks: public HTTP(S) URLs only, interval and locations are changed in the console, and `applyConfig` leaves them unchanged.
-- `scripts/tools.json` synced with the server (53 tools).
+- The tool list synced with the server (53 tools).
 
 ## [2.0.1] - 2026-10-21
 

@@ -203,16 +203,16 @@ skills/<name>/SKILL.md           one skill per folder, details in references/
 .mcp.json                        MCP server for the Claude Code plugin
 plugin.json, mcp.json            Agent Plugins 1.0 manifests
 gemini-extension.json, GEMINI.md Gemini CLI extension
-scripts/validate.mjs             validator run in CI
-scripts/tools.json               MCP tool list the validator checks against
-scripts/sync-tools.ts            regenerates tools.json from the Observer source
-scripts/gen-probe-refs.ts        regenerates observer-checks/references
 evals/specs/                     trigger and behaviour specs per skill
-scripts/build-evals.mjs          turns the specs into a claude plugin eval suite
+evals/tools.json                 MCP tool list the validator checks against
 ```
 
-Run the checks with `node scripts/validate.mjs`. How to add a skill, regenerate
-the generated files and run the evals: [CONTRIBUTING.md](CONTRIBUTING.md).
+This branch holds only Markdown, JSON, YAML and images, which is what the
+plugin directory accepts. The development scripts (the validator run in CI, the
+generators and the eval builder) are on the
+[`tools` branch](https://github.com/useobserver/skills/tree/tools). How to run
+them, add a skill and regenerate the generated files:
+[CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Versioning
 
