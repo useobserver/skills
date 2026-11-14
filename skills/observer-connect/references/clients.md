@@ -5,9 +5,11 @@ Server name `observer`. URL `https://mcp.use.observer/mcp` (full) or
 URL and nothing else; the client opens the browser for approval. With an API
 key, send `Authorization: Bearer <key>`.
 
-Never write a key into a config file. Have the user put it in an environment
-variable (for example `OBSERVER_API_KEY`) and reference that variable from the
-config, as in the examples below.
+Use OAuth wherever the client supports it: no key is pasted or stored. With an
+API key, never write the key into a config file. Have the user keep it in an
+environment variable and reference that variable from the client's config. The
+exact form for each client (Claude Code, Cursor, VS Code, Codex) is at
+https://docs.use.observer/docs/mcp/connect-ai-agent#manual-setup .
 
 ## Claude Code
 
@@ -22,19 +24,8 @@ The default scope is `local` (this project, for this user only). Add
 shared `.mcp.json`. Then sign in: run `/mcp` in a session and choose
 `observer`, or run `claude mcp login observer` from the shell.
 
-API key, in a project `.mcp.json` that reads the key from the environment:
-
-```json
-{
-  "mcpServers": {
-    "observer": {
-      "type": "http",
-      "url": "https://mcp.use.observer/mcp",
-      "headers": { "Authorization": "Bearer ${OBSERVER_API_KEY}" }
-    }
-  }
-}
-```
+API key: add an `Authorization` header to the same entry, with the key taken
+from an environment variable as the page linked above shows.
 
 The Observer plugin adds the server with OAuth for you:
 
@@ -78,18 +69,8 @@ The same entry by hand, in `~/.cursor/mcp.json` (every project) or
 }
 ```
 
-API key, read from the environment:
-
-```json
-{
-  "mcpServers": {
-    "observer": {
-      "url": "https://mcp.use.observer/mcp",
-      "headers": { "Authorization": "Bearer ${env:OBSERVER_API_KEY}" }
-    }
-  }
-}
-```
+API key: add an `Authorization` header to that entry, with the key taken from
+an environment variable as the page linked above shows.
 
 ## VS Code (GitHub Copilot)
 
@@ -133,8 +114,8 @@ The same entry in `~/.codex/config.toml`:
 url = "https://mcp.use.observer/mcp"
 ```
 
-API key, read from an environment variable: add
-`bearer_token_env_var = "OBSERVER_API_KEY"` to that table.
+API key: Codex can read the bearer token from an environment variable; the
+setting is on the page linked above.
 
 ## Gemini CLI
 
@@ -161,6 +142,6 @@ adds this entry and the skills for you.
 ## Any other client
 
 Use a remote (Streamable HTTP) server with the URL above. If the client has no
-OAuth support, send the `Authorization: Bearer <key>` header from an
-environment variable and get the key from
+OAuth support, send the `Authorization: Bearer <key>` header, with the key
+kept in an environment variable and never in a file, and get the key from
 `https://use.observer/connect?client=other`.

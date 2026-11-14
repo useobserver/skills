@@ -4,6 +4,11 @@ All notable changes to the Observer skills and plugin. Versions follow
 semantic versioning. The version here matches `.claude-plugin/plugin.json`,
 `plugin.json` and `gemini-extension.json`.
 
+## [2.1.2] - 2026-11-14
+
+- The reference files no longer carry configuration that reads an API key from an environment variable. `observer-connect` still says to keep a key in an environment variable and never in a file, and links the page with each client's exact form; OAuth stays the default. The CI example for change events uses a placeholder and says to reference a CI secret.
+- The Claude plugin manifest names its icon by URL (`icon`), because the directory page cannot display an icon given as a path inside the plugin.
+
 ## [2.1.1] - 2026-11-14
 
 - The development scripts (validator, generators, eval builder) moved to the `tools` branch, and the unused SVG headline is gone. This branch now holds only Markdown, JSON, YAML and images, which is what the plugin directory accepts. No skill changed.

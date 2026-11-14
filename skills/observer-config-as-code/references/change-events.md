@@ -33,13 +33,14 @@ example `{ "kind": "deploy", "source": "manual", "ref": "v2.4.1",
 ```yaml
 - name: Record deploy in Observer
   if: success()
-  env:
-    OBSERVER_API_KEY: ${{ secrets.OBSERVER_CHANGE_EVENTS_KEY }}
   run: |
     curl -fsS -X POST https://use.observer/api/v1/change-events \
-      -H "Authorization: Bearer $OBSERVER_API_KEY" \
+      -H "Authorization: Bearer YOUR_API_KEY" \
       -H "Content-Type: application/json" \
       -d "{\"kind\":\"deploy\",\"source\":\"github-actions\",\"ref\":\"$GITHUB_SHA\",\"service\":\"Checkout\",\"url\":\"$GITHUB_SERVER_URL/$GITHUB_REPOSITORY/actions/runs/$GITHUB_RUN_ID\",\"dedupe_key\":\"$GITHUB_RUN_ID-$GITHUB_RUN_ATTEMPT\"}"
 ```
 
-Use a key that holds only `write:change_events` for this step.
+`YOUR_API_KEY` stands for the key: never put the key itself in the workflow
+file. Store it as a secret in the CI system (in GitHub Actions, a repository
+or environment secret) and reference that secret here. Use a key that holds
+only `write:change_events` for this step.

@@ -4,18 +4,18 @@
 `target` to return one ready-to-run snippet in `install.<target>`:
 `label`, `content`, and `file` (a suggested file name for Compose,
 Kubernetes and systemd). From create and rotate the snippet carries the key;
-everywhere else it has the `${AGENT_KEY}` placeholder. Always give the user
+everywhere else it has a placeholder where the key goes. Always give the user
 the snippet Observer returns rather than writing your own. `getAgent` with
 `target` also returns `install.<target>.logs_command`, which is the most
 reliable way to read the logs.
 
 | Target | Runs as | Logs | Restart after a key change |
 |---|---|---|---|
-| `docker` | container from `ghcr.io/useobserver/agent:latest` | `docker logs -f observer-agent` | recreate the container with the new `AGENT_KEY` |
+| `docker` | container from `ghcr.io/useobserver/agent:latest` | `docker logs -f observer-agent` | recreate the container with the new key |
 | `compose` | Compose service | `docker compose logs -f observer-agent` | update the env file, `docker compose up -d` |
 | `kubernetes` | Deployment `observer-agent` with a Secret `observer-agent`, in the namespace `observability` | `kubectl logs -f deploy/observer-agent -n observability` | update the `observer-agent` Secret, `kubectl rollout restart deploy/observer-agent -n observability` |
 | `systemd` | Linux service `observer-agent` | `journalctl -u observer-agent -f` | edit `/etc/observer-agent.env`, `systemctl restart observer-agent` |
-| `launchd` | macOS user agent `use.observer.agent` | `tail -f ~/Library/Logs/observer-agent.log` | edit `AGENT_KEY` in `~/Library/LaunchAgents/use.observer.agent.plist`, then `launchctl bootout` and `launchctl bootstrap` it |
+| `launchd` | macOS user agent `use.observer.agent` | `tail -f ~/Library/Logs/observer-agent.log` | replace the key in `~/Library/LaunchAgents/use.observer.agent.plist`, then `launchctl bootout` and `launchctl bootstrap` it |
 | `binary` | foreground process (Linux or macOS) | its terminal | stop it and start it again with the new key |
 
 The `systemd`, `launchd` and `binary` commands pick the right binary for the
