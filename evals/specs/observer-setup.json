@@ -2,6 +2,7 @@
   "skill": "observer-setup",
   "should_trigger": [
     "Set up Observer for me. Instructions: https://use.observer/llms.txt",
+    "Watch https://www.example.com and give me a status page.",
     "Put a status page in front of api.example.com and our Postgres.",
     "We just signed up for Observer, get us monitoring checkout.",
     "Onboard our team to Observer with a status page."
@@ -52,6 +53,33 @@
         "applyConfig without a dry run first",
         "writing the agent key to a file",
         "creating a duplicate agent when one with connected_ever false exists"
+      ]
+    },
+    {
+      "prompt": "Watch https://www.example.com and give me a status page.",
+      "expected_first_tool": "getMe",
+      "order": [
+        [
+          "getMe",
+          "createHostedCheck"
+        ],
+        [
+          "createHostedCheck",
+          "getMetric"
+        ]
+      ],
+      "forbidden_tools": [
+        "createAgent",
+        "deleteAgent",
+        "deleteMetric",
+        "deleteService",
+        "deleteSlo",
+        "deletePage"
+      ],
+      "forbidden_actions": [
+        "creating a hosted check without saying hosted checks are experimental",
+        "creating a hosted check without saying the status page is public",
+        "installing an agent for a public website the user did not ask an agent for"
       ]
     }
   ]

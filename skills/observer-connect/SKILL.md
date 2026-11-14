@@ -142,6 +142,14 @@ Scopes: <scopes>
 Missing for your request: <scopes or "none">
 ```
 
+## After connecting
+
+If the user named a public website or API, `observer-setup` starts it with
+`createHostedCheck`: Observer checks the URL from its own locations and puts
+it on a public status page. Hosted checks are an experimental feature; say
+so. Anything private (internal services, databases, Prometheus, CloudWatch,
+logs) needs an Observer Agent, which `observer-setup` installs.
+
 ## Example requests
 
 - "Hook my Claude Code up to Observer."

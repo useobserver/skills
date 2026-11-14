@@ -37,6 +37,17 @@ with `testProbe` (`write:metrics` or `write:config`).
 Read the reference for the chosen type before writing `source_config`. The
 references are generated from the same schemas Observer validates with.
 
+### Hosted checks
+
+A public website or API can also be watched from Observer's own locations
+with `createHostedCheck` (`write:config`), with no agent. Hosted checks are
+an experimental feature; say so when you offer one. Through the API they are
+HTTP(S) checks of public URLs only, and the check goes on a status page.
+Their interval and locations are changed in the console. `applyConfig` leaves
+hosted checks unchanged: it does not create, update or prune them, and a
+document entry that names one is reported as a warning. Everything in the
+steps below is about checks an agent runs.
+
 ## 2. Keep secrets on the agent host
 
 `source_config` is stored by Observer, so it never holds a secret. Every

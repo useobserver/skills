@@ -1,6 +1,6 @@
 {
   "source": "apps/observer-mcp/generated/tools.ts",
-  "count": 52,
+  "count": 53,
   "tools": [
     {
       "name": "addIncidentNote",
@@ -104,6 +104,21 @@
         "readOnlyHint": false,
         "destructiveHint": false,
         "idempotentHint": false,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "createHostedCheck",
+      "method": "POST",
+      "path": "/checks",
+      "scopes": [
+        "write:config"
+      ],
+      "summary": "Watch a public website or API from Observer's own locations and put it on a public status page (experimental, nothing to install)",
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": false,
+        "idempotentHint": true,
         "openWorldHint": false
       }
     },
@@ -367,7 +382,7 @@
       "scopes": [
         "read:metrics"
       ],
-      "summary": "Get metric by id",
+      "summary": "Get metric by id or key",
       "annotations": {
         "readOnlyHint": true,
         "destructiveHint": false,
@@ -412,7 +427,7 @@
       "scopes": [
         "read:config"
       ],
-      "summary": "Get a status page, with its metrics in display order",
+      "summary": "Get a status page by id or key, with its metrics in display order",
       "annotations": {
         "readOnlyHint": true,
         "destructiveHint": false,
@@ -443,7 +458,7 @@
       "scopes": [
         "read:services"
       ],
-      "summary": "Get service by id",
+      "summary": "Get service by id or key",
       "annotations": {
         "readOnlyHint": true,
         "destructiveHint": false,
@@ -473,7 +488,7 @@
       "scopes": [
         "read:slos"
       ],
-      "summary": "Get SLO with latest burn event",
+      "summary": "Get SLO by id or key, with latest burn event",
       "annotations": {
         "readOnlyHint": true,
         "destructiveHint": false,

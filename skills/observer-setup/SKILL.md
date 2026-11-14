@@ -1,6 +1,6 @@
 ---
 name: observer-setup
-description: Sets Observer up end to end for a new user or a new project. Confirms the organization and plan with getMe, gets an Observer Agent installed (reusing one only if it never connected), tests every source with testProbe, builds one config document with metrics, services (including services[].metrics) and a status page, applies it with a dry run first, shares the page URL and checks the first readings. Use when the user says "set up Observer", "set up a status page for our API", "start monitoring our services", "onboard us to Observer", "I just signed up, what now", or pastes the llms.txt setup prompt. For one extra check on an existing setup use observer-checks; to connect a client first use observer-connect; for an existing config file in git use observer-config-as-code.
+description: Sets Observer up end to end for a new user or a new project. Confirms the organization and plan with getMe, starts a public website or API with a hosted check (experimental, no agent), gets an Observer Agent installed for everything else (reusing one only if it never connected), tests every source with testProbe, builds one config document with metrics, services (including services[].metrics) and a status page, applies it with a dry run first, shares the page URL and checks the first readings. Use when the user says "set up Observer", "set up a status page for our API", "start monitoring our services", "onboard us to Observer", "I just signed up, what now", or pastes the llms.txt setup prompt. For one extra check on an existing setup use observer-checks; to connect a client first use observer-connect; for an existing config file in git use observer-config-as-code.
 license: ISC
 ---
 
@@ -40,10 +40,38 @@ Collect, and ask when unknown, rather than guessing:
   proxy or a private CA, or has restricted egress.
 - The status page subdomain they want (`<subdomain>.use.observer`).
 
-Use `observer-checks` to choose each `source_type` and its fields. Heartbeat,
-manual and alert metrics need no agent; everything else does.
+Use `observer-checks` to choose each `source_type` and its fields. A hosted
+check (step 3), heartbeat, manual and alert metrics need no agent; everything
+else does.
 
-## 3. Get an Observer Agent
+## 3. A public website or API: start with a hosted check
+
+If the user named a public website or API and did not ask for an agent,
+start there. Observer checks it from its own locations, so nothing is
+installed. If they asked for an agent, skip to step 4.
+
+1. Tell the user two things first: hosted checks are an experimental feature,
+   and the check goes on a public status page (their first page, or a new one
+   when they have none).
+2. `createHostedCheck` with `{ "url": "https://..." }`.
+3. Give the user `page.public_url`.
+4. Wait `first_result_eta_seconds`, then `getMetric` once with `check.id` and
+   report what it measured.
+
+Verify: `getMetric` shows a status and a value. `existing: true` means that
+URL was already watched and nothing was created.
+If it fails: 503 `outside_in_unavailable` means hosted checks are not
+available; go on with an agent (step 4). 403 `quota_exceeded` is the plan's
+hosted check limit. A 400 names what is wrong with the URL: only public
+HTTP(S) addresses work, so an internal name or a private address needs an
+agent.
+
+If that is all the user wanted, stop here and offer one next step: email
+alerts (set up on the Alerts page of the console; alert destinations have no
+API) or another URL. For anything private (internal services, databases,
+Prometheus, CloudWatch, logs) go on with the agent.
+
+## 4. Get an Observer Agent
 
 1. `listAgents` with `name` set to the intended agent name.
 2. If one exists with `connected_ever: false`, nothing has ever run with its
@@ -78,7 +106,7 @@ or upgrade. If the key was lost before use, do not recreate the agent:
 confirm `connected_ever: false` and rotate with `invalidate_immediately`.
 More in `observer-agent`.
 
-## 4. Test every source before creating its metric
+## 5. Test every source before creating its metric
 
 For each check, `testProbe` with `agent_id`, `source_type`, `source_config`
 and, once you have them, the four threshold fields.
@@ -96,7 +124,7 @@ and, once you have them, the four threshold fields.
 Verify: every check returned a value, and with thresholds the expected
 `status`.
 
-## 5. Build the document, dry run, apply
+## 6. Build the document, dry run, apply
 
 Build one document. Every new metric needs `thresholds` with all four fields
 (heartbeat, manual and alert metrics excepted). Intervals are whole minutes.
@@ -149,7 +177,7 @@ If it fails: 422 `config_invalid` lists each `path` and `message`; fix and
 dry run again. Plan limits (quotas, the push interval floor) are 422
 `config_invalid` errors too: tell the user.
 
-## 6. Share the page and check the first readings
+## 7. Share the page and check the first readings
 
 1. `listPages` and give the user `public_url`.
 2. After a few minutes, `listMetrics`. The agent picks up new definitions in
@@ -171,12 +199,15 @@ Next: <SLOs, alerts in the console, incidents scopes, as relevant>
 - Confirm the organization before the first write.
 - `testProbe` before every new metric; dry run before every apply.
 - No `prune`, no deletes during setup.
-- Pages are public by default. Say so before you apply the first page.
+- Pages are public by default. Say so before you apply the first page, and
+  before the first `createHostedCheck`.
+- Say that hosted checks are experimental whenever you offer or create one.
 - Do not restart the client between creating an agent and the user saving
   its install command.
 
 ## Example requests
 
+- "Watch https://example.com and give me a status page."
 - "Set up Observer for me. Instructions: https://use.observer/llms.txt"
 - "Put a status page in front of api.example.com and our Postgres."
 - "We run everything on Kubernetes; get Observer monitoring checkout."

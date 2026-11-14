@@ -117,7 +117,7 @@ that from the client config. Per-client examples:
 |---|---|---|
 | [`observer`](skills/observer/SKILL.md) | Entry point: checks the connection with `getMe`, global safety rules, routes to the right skill | "Is Observer connected? Anything red right now?" |
 | [`observer-connect`](skills/observer-connect/SKILL.md) | OAuth, device flow, API keys, scopes, read-only endpoint | "Connect Observer but only let it read." |
-| [`observer-setup`](skills/observer-setup/SKILL.md) | End-to-end onboarding: agent, tested checks, services, status page | "Put a status page in front of api.example.com." |
+| [`observer-setup`](skills/observer-setup/SKILL.md) | End-to-end onboarding: a hosted check for a public website (experimental), or an agent with tested checks, services and a status page | "Put a status page in front of api.example.com." |
 | [`observer-checks`](skills/observer-checks/SKILL.md) | Choose a source type, fill its config, test it, set thresholds | "Alert when our cert has under 14 days left." |
 | [`observer-no-data`](skills/observer-no-data/SKILL.md) | Diagnose no data, stale values, offline agents, reason codes | "Why is the Postgres check grey?" |
 | [`observer-config-as-code`](skills/observer-config-as-code/SKILL.md) | Export and apply YAML, CLI, GitHub Action, deletes, deploy markers | "Plan Observer changes on every PR." |
@@ -179,7 +179,7 @@ rules. The validator keeps this list in step with the server.
 | Account | `getMe` |
 | Observer Agents | `listAgents`, `getAgent`, `createAgent`, `rotateAgentKey`, `deleteAgent` |
 | Status pages | `listPages`, `getPage`, `updatePage`, `deletePage` |
-| Metrics | `listMetrics`, `getMetric`, `getMetricHistory`, `testProbe`, `getProbeTest`, `setManualMetricStatus`, `getMetricHeartbeat`, `rotateMetricHeartbeatUrl`, `deleteMetric` |
+| Metrics | `listMetrics`, `getMetric`, `createHostedCheck`, `getMetricHistory`, `testProbe`, `getProbeTest`, `setManualMetricStatus`, `getMetricHeartbeat`, `rotateMetricHeartbeatUrl`, `deleteMetric` |
 | Services and SLOs | `listServices`, `getService`, `deleteService`, `listSlos`, `getSlo`, `deleteSlo` |
 | SLA statements | `listSlaStatements`, `getSlaStatement` |
 | Incidents | `listIncidents`, `getIncident`, `createIncident`, `patchIncident`, `publishIncident`, `resolveIncident`, `appendIncidentMessage`, `draftIncidentFromMetric`, `deleteIncident`, `getIncidentImpact`, `draftIncidentUpdate`, `addIncidentNote`, `listIncidentNotes`, `exportIncidentEvidence` |
